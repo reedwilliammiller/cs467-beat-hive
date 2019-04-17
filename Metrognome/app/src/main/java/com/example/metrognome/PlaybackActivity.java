@@ -23,6 +23,7 @@ public class PlaybackActivity extends AppCompatActivity {
     private EditText editText;
     private Button startStopButton;
     private MediaPlayer[] mediaPlayers;
+    private Handler handler;
     private int beatsPerMinute;
     private boolean running;
 
@@ -45,6 +46,13 @@ public class PlaybackActivity extends AppCompatActivity {
         editText = findViewById(R.id.bpm_edit_text);
         startStopButton = findViewById(R.id.start_stop_button);
         initStartStopButton();
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                mediaPlayers[msg.what].start();
+                return true;
+            }
+        });
         mediaPlayers = new MediaPlayer[MAX_MEDIA_PLAYERS];
         for (int i = 0; i < mediaPlayers.length; i++) {
             mediaPlayers[i] = MediaPlayer.create(this, R.raw.clave1);
@@ -71,11 +79,15 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void startPlayer() {
-        new MetronomeTask().execute(mediaPlayers);
+        long now = SystemClock.uptimeMillis();
+        long millisBetweenBeats = millisBetweenBeats();
+        for (int i = 0; i < 1000; i++) {
+            handler.sendMessageAtTime(handler.obtainMessage(i % mediaPlayers.length), now + i * millisBetweenBeats);
+        }
     }
 
     private void stopPlayer() {
-
+        handler.removeCallbacksAndMessages(null);
     }
 
     private long millisBetweenBeats() {
@@ -96,20 +108,5 @@ public class PlaybackActivity extends AppCompatActivity {
             Toast.makeText(this, "Invalid BPM: Not an integer.", Toast.LENGTH_SHORT).show();
         }
         return false;
-    }
-
-    private class MetronomeTask extends AsyncTask<MediaPlayer, Void, Void> {
-        @Override
-        protected Void doInBackground(MediaPlayer... mediaPlayers) {
-            long millisBetweenBeats = millisBetweenBeats();
-            int idx = 0;
-            do {
-                mediaPlayers[idx].start();
-                idx += 1;
-                idx %= MAX_MEDIA_PLAYERS;
-                SystemClock.sleep(millisBetweenBeats);
-            } while (running);
-            return null;
-        }
     }
 }
