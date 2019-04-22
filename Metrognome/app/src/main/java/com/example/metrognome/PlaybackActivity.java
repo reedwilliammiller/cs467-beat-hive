@@ -1,7 +1,11 @@
 package com.example.metrognome;
 
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -19,10 +23,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PlaybackActivity extends AppCompatActivity {
-    private static final int MAX_MEDIA_PLAYERS = 10;
+    private static final float VOLUME = 1f;
     private EditText editText;
     private Button startStopButton;
-    private MediaPlayer[] mediaPlayers;
+    private SoundPool soundPool;
+    private int claveId;
     private Handler handler;
     private int beatsPerMinute;
     private boolean running;
@@ -36,10 +41,9 @@ public class PlaybackActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        soundPool.release();
+        soundPool = null;
         super.onDestroy();
-        for (MediaPlayer m : mediaPlayers) {
-            m.release();
-        }
     }
 
     private void init() {
@@ -49,14 +53,20 @@ public class PlaybackActivity extends AppCompatActivity {
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                mediaPlayers[msg.what].start();
+                soundPool.play(1, VOLUME, VOLUME, 0, 0, 1f);
                 return true;
             }
         });
-        mediaPlayers = new MediaPlayer[MAX_MEDIA_PLAYERS];
-        for (int i = 0; i < mediaPlayers.length; i++) {
-            mediaPlayers[i] = MediaPlayer.create(this, R.raw.clave1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(20).build();
+        } else {
+            soundPool = new SoundPool(20, AudioManager.STREAM_ALARM, 0);
         }
+        claveId = soundPool.load(this, R.raw.clave1, 1);
     }
 
     private void initStartStopButton() {
@@ -82,7 +92,7 @@ public class PlaybackActivity extends AppCompatActivity {
         long now = SystemClock.uptimeMillis();
         long millisBetweenBeats = millisBetweenBeats();
         for (int i = 0; i < 1000; i++) {
-            handler.sendMessageAtTime(handler.obtainMessage(i % mediaPlayers.length), now + i * millisBetweenBeats);
+            handler.sendMessageAtTime(handler.obtainMessage(), now + i * millisBetweenBeats);
         }
     }
 
