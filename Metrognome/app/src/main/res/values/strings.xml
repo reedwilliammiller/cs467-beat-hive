@@ -3,4 +3,7 @@
     <string name="bpm">BPM</string>
     <string name="start">Start</string>
     <string name="stop">stop</string>
+    <string name="basic_metronome">Basic Metronome</string>
+    <string name="your_beats">Your Beats</string>
+    <string name="create_new_beat">Create Beat</string>
 </resources>
