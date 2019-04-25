@@ -23,7 +23,7 @@ public class PlaybackActivity extends AppCompatActivity {
     private SoundPoolWrapper soundPool;
     private Handler handler;
     private boolean running;
-    private Measure measure = new Measure();
+    private Measure measure = Measure.CLAVE;
     private MeasureRunnable measureRunnable;
     private Spinner spinner;
 
