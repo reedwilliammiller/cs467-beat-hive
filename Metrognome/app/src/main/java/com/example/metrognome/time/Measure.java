@@ -28,10 +28,16 @@ public class Measure implements Iterable<Beat> {
 
     public static Measure CLAVE = new Measure();
     static {
-        CLAVE.getBeatAt(1).subdivideBy(2);
+        CLAVE.getBeatAt(0).subdivideBy(4);
+        CLAVE.getBeatAt(1).subdivideBy(4);
+        CLAVE.getBeatAt(2).subdivideBy(4);
+        CLAVE.getBeatAt(3).subdivideBy(4);
+
+        CLAVE.getBeatAt(0).setSoundAt(3, SoundPoolWrapper.DEFAULT_SOUND);
         CLAVE.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        CLAVE.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+        CLAVE.getBeatAt(1).setSoundAt(3, SoundPoolWrapper.DEFAULT_SOUND);
         CLAVE.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+        CLAVE.getBeatAt(2).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
     }
 
     /**

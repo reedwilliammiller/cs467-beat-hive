@@ -46,7 +46,7 @@ public class SoundPoolWrapper {
         if (index == -1) {
             return INAUDIBLE;
         }
-        return soundIds[0];
+        return soundIds[index];
     }
 
     public void play(int index) {
