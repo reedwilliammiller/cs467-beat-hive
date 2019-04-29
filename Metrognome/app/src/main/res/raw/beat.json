@@ -1,0 +1,92 @@
+{
+  "title": "My Phat Beat",
+  "date_created": "04/26/19",
+  "last_modified": "04/26/19",
+  "measures": [
+    {
+      "top_signature": 4,
+      "bottom_signature": 4,
+      "beats": [
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "subdivisions": 2,
+          "sounds": [
+            1,
+            2
+          ]
+        },
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "subdivisions": 1,
+          "sounds": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "top_signature": 4,
+      "bottom_signature": 0,
+      "beats": []
+    },
+    {
+      "top_signature": 4,
+      "bottom_signature": 4,
+      "beats": [
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            2,
+            0
+          ]
+        },
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "subdivisions": 4,
+          "sounds": [
+            1,
+            0,
+            3,
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}
