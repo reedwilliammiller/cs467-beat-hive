@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlaybackActivity"></activity>
+        <activity android:name=".EditorActivity"></activity>
     </application>
 
 </manifest>
