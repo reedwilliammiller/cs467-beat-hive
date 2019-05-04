@@ -1,5 +1,5 @@
 {
-  "title": "My Phat Beat",
+  "title": "Mambo #5",
   "author": "DJ Phat Beatz",
   "last_bpm": 60,
   "date_created": "04/26/19",
@@ -10,7 +10,6 @@
       "bottom_signature": 4,
       "beats": [
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
@@ -19,14 +18,12 @@
           ]
         },
         {
-          "subdivisions": 2,
           "sounds": [
             1,
             2
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
@@ -35,7 +32,6 @@
           ]
         },
         {
-          "subdivisions": 1,
           "sounds": [
             1,
             2
@@ -48,7 +44,6 @@
       "bottom_signature": 4,
       "beats": [
         {
-          "subdivisions": 4,
           "sounds": [
             0,
             0,
@@ -57,7 +52,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             0,
             0,
@@ -66,7 +60,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             0,
             0,
@@ -75,7 +68,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             0,
             0,
@@ -90,7 +82,6 @@
       "bottom_signature": 4,
       "beats": [
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
@@ -99,7 +90,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
@@ -108,7 +98,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
@@ -117,7 +106,6 @@
           ]
         },
         {
-          "subdivisions": 4,
           "sounds": [
             1,
             0,
