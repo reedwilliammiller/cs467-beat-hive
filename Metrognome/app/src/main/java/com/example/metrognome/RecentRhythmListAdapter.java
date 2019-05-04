@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import java.util.List;
 
 
-
-public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.RhythmViewHolder> {
+public class RecentRhythmListAdapter extends RecyclerView.Adapter<RecentRhythmListAdapter.RhythmViewHolder> {
     class RhythmViewHolder extends RecyclerView.ViewHolder {
         private final Button rhythmItemView;
 
@@ -23,11 +23,11 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
     private final LayoutInflater mInflater;
     private List<Rhythm> mRhythms;
 
-    RhythmListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
+    RecentRhythmListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
     @Override
     public RhythmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recyclerview_rhythm_file, parent, false);
+        View itemView = mInflater.inflate(R.layout.recyclerview_recent_rhythm_file, parent, false);
         return new RhythmViewHolder(itemView);
     }
 

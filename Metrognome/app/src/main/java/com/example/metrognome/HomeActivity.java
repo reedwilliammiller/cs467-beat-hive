@@ -22,7 +22,7 @@ public class HomeActivity extends AppCompatActivity{
         setContentView(R.layout.activity_home);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerviewrecent);
-        final RhythmListAdapter adapter = new RhythmListAdapter(this);
+        final RecentRhythmListAdapter adapter = new RecentRhythmListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
