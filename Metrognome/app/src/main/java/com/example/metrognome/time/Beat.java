@@ -9,14 +9,16 @@ import java.util.Arrays;
  */
 public class Beat {
     private Measure measure;
+    private int index;
     private int[] soundIds;
 
-    public Beat(Measure measure) {
-        this(measure, 1);
+    public Beat(Measure measure, int index) {
+        this(measure, index, 1);
     }
 
-    public Beat(Measure measure, int numSubdivisions) {
+    public Beat(Measure measure, int index, int numSubdivisions) {
         this.measure = measure;
+        this.index = index;
         subdivideBy(numSubdivisions);
     }
 
@@ -46,7 +48,11 @@ public class Beat {
     }
 
     public Measure getMeasure() {
-        return this.measure;
+        return measure;
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 
     public String toString() {

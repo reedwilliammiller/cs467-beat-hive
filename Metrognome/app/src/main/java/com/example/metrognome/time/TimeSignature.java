@@ -27,4 +27,8 @@ public class TimeSignature {
     public int getNote() {
         return note;
     }
+
+    public String toString() {
+        return "TimeSignature: " + getBeats() + "/" + getNote();
+    }
 }

@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_marginTop="@dimen/playback_control_title_margin_top"/>
 
     <include layout="@layout/recycler_view_measure"

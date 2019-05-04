@@ -1,7 +1,5 @@
 package com.example.metrognome.time;
 
-import android.util.Log;
-
 import com.example.metrognome.audio.SoundPoolWrapper;
 
 import java.util.ArrayList;
@@ -12,20 +10,19 @@ import java.util.List;
  * Represents an entire rhythm which is a sequence of measures.
  */
 public class Rhythm implements Iterable<Measure> {
-    private static final String TAG = Rhythm.class.getSimpleName();
     private List<Measure> measures = new ArrayList<>();
     private String name;
     private int tempo;
 
-    public static Rhythm CLAVE;
+    public static Rhythm RUMBA_CLAVE;
     static {
-        CLAVE = new Rhythm("Rumba Clave", 120);
+        RUMBA_CLAVE = new Rhythm("Rumba Clave", 120);
 
-        Measure first = new Measure(TimeSignature.COMMON_TIME, CLAVE.tempo);
+        Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
         first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
         first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
 
-        Measure second = new Measure(TimeSignature.COMMON_TIME, CLAVE.tempo);
+        Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
         second.getBeatAt(1).subdivideBy(2);
         second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
         second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
@@ -34,8 +31,8 @@ public class Rhythm implements Iterable<Measure> {
         second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
         second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
 
-        CLAVE.addMeasure(first);
-        CLAVE.addMeasure(second);
+        RUMBA_CLAVE.addMeasure(first);
+        RUMBA_CLAVE.addMeasure(second);
     }
 
     public Rhythm(String name, int tempo) {

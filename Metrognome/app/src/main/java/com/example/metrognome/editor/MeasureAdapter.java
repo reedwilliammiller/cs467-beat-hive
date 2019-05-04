@@ -1,8 +1,8 @@
 package com.example.metrognome.editor;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,8 @@ import android.widget.ToggleButton;
 import com.example.metrognome.R;
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.time.Beat;
+import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
-import com.example.metrognome.time.TimeSignature;
 
 public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatViewHolder> {
     private static final String TAG = MeasureAdapter.class.getSimpleName();
@@ -35,11 +35,8 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
 
     @Override
     public void onBindViewHolder(BeatViewHolder holder, int position) {
-        holder.beat = rhythm.getBeatAt(position);
-        holder.measureIndex = rhythm.getMeasureIndexOfBeatAt(position);
-        holder.totalMeasures = rhythm.getMeasureCount();
-        holder.timeSignature = rhythm.getMeasureAt(holder.measureIndex).getTimeSignature();
-        holder.isFirstBeat = rhythm.isFirstBeatOfMeasureAt(position);
+        final Beat beat = rhythm.getBeatAt(position);
+        holder.beat = beat;
         holder.init();
     }
 
@@ -49,11 +46,9 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
     }
 
     public class BeatViewHolder extends RecyclerView.ViewHolder {
+        private Rhythm rhythm;
+        private Measure measure;
         public Beat beat;
-        public boolean isFirstBeat;
-        public int measureIndex;
-        public int totalMeasures;
-        public TimeSignature timeSignature;
 
         private View view;
         private TextView measureTextView;
@@ -64,13 +59,18 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             view = v;
         }
         public void init() {
+            measure = beat.getMeasure();
+            rhythm = measure.getRhythm();
+
+            boolean isFirstBeat = beat.getIndex() == 0;
+
             if (!isFirstBeat) {
                 view.findViewById(R.id.measure_label).setVisibility(View.GONE);
             } else {
                 measureTextView = view.findViewById(R.id.text_view_measure);
                 timeSignatureTextView = view.findViewById(R.id.text_view_measure_time_signature);
-                measureTextView.setText(measureIndex + 1 + "/" + totalMeasures);
-                timeSignatureTextView.setText(timeSignature.getBeats() + "/" + timeSignature.getNote());
+                measureTextView.setText(measure.getIndex() + 1 + "/" + rhythm.getMeasureCount());
+                timeSignatureTextView.setText(measure.getTimeSignature().getBeats() + "/" + measure.getTimeSignature().getNote());
             }
 
             int subdivisionCount = beat.getSubdivisions();
@@ -84,50 +84,50 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 view.findViewById(R.id.note_4).setVisibility(View.GONE);
             }
 
-            ToggleButton noteButton = view.findViewById(R.id.note_1).findViewById(R.id.button_note);
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-                    } else {
-                        beat.setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-                    }
-                }
-            });
+            setupNote(R.id.note_1, 0);
+            setupNote(R.id.note_2, 1);
+            setupNote(R.id.note_3, 2);
+            setupNote(R.id.note_4, 3);
+        }
 
-            noteButton = view.findViewById(R.id.note_2).findViewById(R.id.button_note);
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+        private void setupNote(final int noteId, final int subdivisionIndex) {
+            View noteView = view.findViewById(noteId);
+            ToggleButton noteButton = noteView.findViewById(R.id.button_note);
+            TextView noteText = noteView.findViewById(R.id.text_view_note);
+            if (noteText != null) {
+                String text;
+                Resources resources = view.getResources();
+                if (subdivisionIndex == 0) {
+                    text = Integer.toString(beat.getIndex() + 1);
+                } else if (subdivisionIndex == 1) {
+                    if (beat.getSubdivisions() == 4) {
+                        text = resources.getString(R.string.e_mnemonic);
                     } else {
-                        beat.setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
+                        text = resources.getString(R.string.and_mnemonic);
                     }
-                }
-            });
-
-            noteButton = view.findViewById(R.id.note_3).findViewById(R.id.button_note);
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+                } else if (subdivisionIndex == 2) {
+                    if (beat.getSubdivisions() == 4) {
+                        text = resources.getString(R.string.and_mnemonic);
                     } else {
-                        beat.setSoundAt(2, SoundPoolWrapper.INAUDIBLE);
+                        text = resources.getString(R.string.a_mnemonic);
                     }
+                } else {
+                    text = resources.getString(R.string.a_mnemonic);
                 }
-            });
+                noteText.setText(text);
+            }
 
-            noteButton = view.findViewById(R.id.note_4).findViewById(R.id.button_note);
+            if (subdivisionIndex < beat.getSubdivisions() && beat.getSoundAt(subdivisionIndex) != SoundPoolWrapper.INAUDIBLE) {
+                noteButton.setChecked(true);
+            }
+
             noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        beat.setSoundAt(3, SoundPoolWrapper.DEFAULT_SOUND);
+                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
                     } else {
-                        beat.setSoundAt(3, SoundPoolWrapper.INAUDIBLE);
+                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
                     }
                 }
             });

@@ -37,7 +37,7 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void init() {
-        rhythm = Rhythm.CLAVE;
+        rhythm = Rhythm.RUMBA_CLAVE;
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(rhythm.getName());
