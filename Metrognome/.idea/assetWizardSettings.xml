@@ -56,6 +56,8 @@
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/edit.svg" />
                             <entry key="outputName" value="beat_library_icon" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/music (1).svg" />
+                            <entry key="outputName" value="ic_trash" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/trash.svg" />
                           </map>
                         </option>
                       </PersistentState>
