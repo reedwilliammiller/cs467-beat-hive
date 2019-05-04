@@ -8,13 +8,15 @@ import java.util.Arrays;
  * Represents an audible or inaudible series of notes that are subdivided.
  */
 public class Beat {
+    private Measure measure;
     private int[] soundIds;
 
-    public Beat() {
-        this(1);
+    public Beat(Measure measure) {
+        this(measure, 1);
     }
 
-    public Beat(int numSubdivisions) {
+    public Beat(Measure measure, int numSubdivisions) {
+        this.measure = measure;
         subdivideBy(numSubdivisions);
     }
 
@@ -41,5 +43,13 @@ public class Beat {
 
     public void playSubdivisionAt(int subdivision, SoundPoolWrapper soundPool) {
         soundPool.play(getSoundAt(subdivision));
+    }
+
+    public Measure getMeasure() {
+        return this.measure;
+    }
+
+    public String toString() {
+        return "Beat: " + Arrays.toString(soundIds);
     }
 }

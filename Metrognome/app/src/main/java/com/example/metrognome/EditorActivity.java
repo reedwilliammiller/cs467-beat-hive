@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import com.example.metrognome.editor.EditorAdapter;
-import com.example.metrognome.time.Beat;
+import com.example.metrognome.editor.MeasureAdapter;
+import com.example.metrognome.time.Rhythm;
 
 public class EditorActivity extends AppCompatActivity {
-
+    Rhythm rhythm = Rhythm.CLAVE;
     RecyclerView rv;
     RecyclerView.LayoutManager lm;
     RecyclerView.Adapter adapter;
@@ -24,10 +24,10 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void init() {
-        rv = findViewById(R.id.recycler);
+        rv = findViewById(R.id.recycler_view_measure);
         lm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rv.setLayoutManager(lm);
-        adapter = new EditorAdapter(this, new Beat[]{new Beat(), new Beat()});
+        adapter = new MeasureAdapter(this, rhythm);
         rv.setAdapter(adapter);
     }
 }

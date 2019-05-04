@@ -3,4 +3,5 @@
     <string name="bpm">BPM</string>
     <string name="start">Start</string>
     <string name="stop">stop</string>
+    <string name="playback_edit_button_text">Edit</string>
 </resources>

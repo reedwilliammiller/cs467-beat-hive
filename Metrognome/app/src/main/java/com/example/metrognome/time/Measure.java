@@ -12,6 +12,9 @@ import java.util.List;
  * Represents a measure of time.
  */
 public class Measure implements Iterable<Beat> {
+    public static final int MAX_BPM = 400;
+    public static final int MIN_BPM = 1;
+
     private static final long MILLIS_PER_BPM = 60000;
     private static final int DEFAULT_TEMPO = 60;
 
@@ -57,7 +60,7 @@ public class Measure implements Iterable<Beat> {
     public void setTimeSignature(TimeSignature timeSignature) {
         this.timeSignature = timeSignature;
         for (int i = 0; i < timeSignature.getBeats(); i++) {
-            beats.add(new Beat());
+            beats.add(new Beat(this));
         }
     }
 
@@ -66,8 +69,8 @@ public class Measure implements Iterable<Beat> {
      * @param tempo the tempo in bpm.
      */
     public void setTempo(int tempo) {
-        if (tempo < 1 || tempo >= 600) {
-            throw new IllegalArgumentException("Tempo must be between 1 and 600: " + tempo);
+        if (tempo < MIN_BPM || tempo >= MAX_BPM) {
+            throw new IllegalArgumentException(String.format("Tempo must be between %d and %d: %d", MIN_BPM, MAX_BPM, tempo));
         }
         this.tempo = tempo;
     }
@@ -117,5 +120,19 @@ public class Measure implements Iterable<Beat> {
     @Override
     public Iterator<Beat> iterator() {
         return beats.iterator();
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Measure: \n");
+        stringBuilder.append("TimeSignature: " + timeSignature + "\n");
+        for (int i = 0; i < beats.size(); i++) {
+            stringBuilder.append(beats.get(i));
+            if (i != beats.size() - 1) {
+                stringBuilder.append(",");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
     }
 }
