@@ -1,13 +1,11 @@
 package com.example.metrognome;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
@@ -25,7 +23,6 @@ public class PlaybackActivity extends AppCompatActivity {
     private boolean running;
     private Measure measure = Measure.CLAVE;
     private MeasureRunnable measureRunnable;
-    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +38,6 @@ public class PlaybackActivity extends AppCompatActivity {
 
     private void init() {
         editText = findViewById(R.id.bpm_edit_text);
-        spinner = findViewById(R.id.spinner);
         startStopButton = findViewById(R.id.start_stop_button);
         startStopButton.setOnClickListener(new View.OnClickListener() {
             @Override

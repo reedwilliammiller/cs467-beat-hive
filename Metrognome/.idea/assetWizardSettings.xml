@@ -52,8 +52,13 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
+<<<<<<< HEAD
                             <entry key="outputName" value="ic_trash" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/trash.svg" />
+=======
+                            <entry key="outputName" value="ic_edit" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/edit.svg" />
+>>>>>>> 9b3b66502d4d7ffa2df82d4a9f6613b0ac8bed26
                           </map>
                         </option>
                       </PersistentState>

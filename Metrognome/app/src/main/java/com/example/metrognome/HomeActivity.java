@@ -20,14 +20,11 @@ public class HomeActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         RecyclerView recyclerView = findViewById(R.id.recyclerviewrecent);
         final RecentRhythmListAdapter adapter = new RecentRhythmListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         mRecentRhythmViewModel = ViewModelProviders.of(this).get(RecentRhythmViewModel.class);
-
         mRecentRhythmViewModel.getRecentRhythms().observe(this, new Observer<List<Rhythm>>() {
             @Override
             public void onChanged(@Nullable final List<Rhythm> rhythms) {
