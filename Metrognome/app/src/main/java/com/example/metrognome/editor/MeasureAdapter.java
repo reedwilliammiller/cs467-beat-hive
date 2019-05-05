@@ -77,27 +77,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 timeSignatureTextView.setText(measure.getTimeSignature().getBeats() + "/" + measure.getTimeSignature().getNote());
             }
 
-            int subdivisionCount = beat.getSubdivisions();
-            if (subdivisionCount < 2) {
-                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.GONE);
-                view.findViewById(R.id.note_2).setVisibility(View.GONE);
-            } else {
-                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.note_2).setVisibility(View.VISIBLE);
-            }
-            if (subdivisionCount < 3) {
-                view.findViewById(R.id.note_3).setVisibility(View.GONE);
-            } else {
-                view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
-            }
-            if (subdivisionCount < 4) {
-                view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.note_4).setVisibility(View.GONE);
-            } else {
-                view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
-                view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
-            }
-
+            updateVisibility();
             setupNote(R.id.note_1, 0);
             setupNote(R.id.note_2, 1);
             setupNote(R.id.note_3, 2);
@@ -148,6 +128,29 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             });
         }
 
+        private void updateVisibility() {
+            int subdivisionCount = beat.getSubdivisions();
+            if (subdivisionCount < 2) {
+                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.GONE);
+                view.findViewById(R.id.note_2).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.note_2).setVisibility(View.VISIBLE);
+            }
+            if (subdivisionCount < 3) {
+                view.findViewById(R.id.note_3).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
+            }
+            if (subdivisionCount < 4) {
+                view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.note_4).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
+                view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
+            }
+        }
+
         private void setupSubdivisionButtons() {
             ImageView addSubdivision = view.findViewById(R.id.button_add_subdivision);
             ImageView removeSubdivision = view.findViewById(R.id.button_remove_subdivision);
@@ -156,7 +159,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 @Override
                 public void onClick(View v) {
                     beat.addSubdivision();
-                    init();
+                    updateVisibility();
                 }
             });
 
@@ -164,7 +167,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 @Override
                 public void onClick(View v) {
                     beat.removeSubdivision();
-                    init();
+                    updateVisibility();
                 }
             });
         }
