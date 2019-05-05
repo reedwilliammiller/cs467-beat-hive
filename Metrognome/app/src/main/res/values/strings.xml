@@ -8,4 +8,5 @@
     <string name="e_mnemonic">e</string>
     <string name="and_mnemonic">+</string>
     <string name="a_mnemonic">a</string>
+    <string name="button_subdivide_text">subdivide</string>
 </resources>

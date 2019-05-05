@@ -3,11 +3,14 @@ package com.example.metrognome.editor;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.metrognome.R;
@@ -61,7 +64,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
         public void init() {
             measure = beat.getMeasure();
             rhythm = measure.getRhythm();
-
+            Log.d(TAG, beat.toString());
             boolean isFirstBeat = beat.getIndex() == 0;
 
             if (!isFirstBeat) {
@@ -75,19 +78,28 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
 
             int subdivisionCount = beat.getSubdivisions();
             if (subdivisionCount < 2) {
+                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.GONE);
                 view.findViewById(R.id.note_2).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.note_2).setVisibility(View.VISIBLE);
             }
             if (subdivisionCount < 3) {
                 view.findViewById(R.id.note_3).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
             }
             if (subdivisionCount < 4) {
                 view.findViewById(R.id.note_4).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
             }
 
             setupNote(R.id.note_1, 0);
             setupNote(R.id.note_2, 1);
             setupNote(R.id.note_3, 2);
             setupNote(R.id.note_4, 3);
+            setupSubdivisionButtons();
         }
 
         private void setupNote(final int noteId, final int subdivisionIndex) {
@@ -129,6 +141,29 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                     } else {
                         beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
                     }
+                }
+            });
+        }
+
+        private void setupSubdivisionButtons() {
+            ImageButton addSubdivision = view.findViewById(R.id.button_add_subdivision);
+            ImageButton removeSubdivision = view.findViewById(R.id.button_remove_subdivision);
+
+            addSubdivision.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    beat.addSubdivision();
+                    Toast.makeText(view.getContext(), "Beat" + beat.toString(), Toast.LENGTH_SHORT).show();
+                    init();
+                }
+            });
+
+            removeSubdivision.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    beat.removeSubdivision();
+                    Toast.makeText(view.getContext(), "Beat" + beat.toString(), Toast.LENGTH_SHORT).show();
+                    init();
                 }
             });
         }
