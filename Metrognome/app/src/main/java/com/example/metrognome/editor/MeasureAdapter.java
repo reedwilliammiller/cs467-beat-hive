@@ -90,8 +90,10 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
             }
             if (subdivisionCount < 4) {
+                view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.note_4).setVisibility(View.GONE);
             } else {
+                view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
                 view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
             }
 
