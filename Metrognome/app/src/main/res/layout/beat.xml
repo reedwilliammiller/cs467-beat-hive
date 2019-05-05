@@ -37,7 +37,7 @@
         app:layout_constraintStart_toEndOf="@id/note_3"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/button_remove_subdivision"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toStartOf="@+id/button_add_subdivision"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/button_add_subdivision"
         android:layout_width="48dp"
         android:layout_height="48dp"

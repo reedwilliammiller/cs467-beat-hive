@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -148,14 +149,13 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
         }
 
         private void setupSubdivisionButtons() {
-            ImageButton addSubdivision = view.findViewById(R.id.button_add_subdivision);
-            ImageButton removeSubdivision = view.findViewById(R.id.button_remove_subdivision);
+            ImageView addSubdivision = view.findViewById(R.id.button_add_subdivision);
+            ImageView removeSubdivision = view.findViewById(R.id.button_remove_subdivision);
 
             addSubdivision.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     beat.addSubdivision();
-                    Toast.makeText(view.getContext(), "Beat" + beat.toString(), Toast.LENGTH_SHORT).show();
                     init();
                 }
             });
@@ -164,7 +164,6 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 @Override
                 public void onClick(View v) {
                     beat.removeSubdivision();
-                    Toast.makeText(view.getContext(), "Beat" + beat.toString(), Toast.LENGTH_SHORT).show();
                     init();
                 }
             });
