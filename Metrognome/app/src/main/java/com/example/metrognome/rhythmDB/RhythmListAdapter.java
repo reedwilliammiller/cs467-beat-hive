@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.metrognome.R;
+
 import java.util.List;
 
 
@@ -21,9 +24,9 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
     }
 
     private final LayoutInflater mInflater;
-    private List<Rhythm> mRhythms;
+    private List<RhythmEntity> mRhythmEntities;
 
-    RhythmListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
+    public RhythmListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
     @Override
     public RhythmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,23 +37,23 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
 
     @Override
     public void onBindViewHolder(RhythmViewHolder holder, int position) {
-        if (mRhythms != null) {
-            Rhythm current = mRhythms.get(position);
+        if (mRhythmEntities != null) {
+            RhythmEntity current = mRhythmEntities.get(position);
             holder.rhythmItemView.setText(current.getTitle());
         } else {
-            holder.rhythmItemView.setText("No Rhythm");
+            holder.rhythmItemView.setText("No RhythmEntity");
         }
     }
 
-    void setRhythms(List<Rhythm> rhythms) {
-        mRhythms = rhythms;
+    public void setRhythms(List<RhythmEntity> rhythmEntities) {
+        mRhythmEntities = rhythmEntities;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if (mRhythms != null)
-            return mRhythms.size();
+        if (mRhythmEntities != null)
+            return mRhythmEntities.size();
         else return 0;
     }
 }
