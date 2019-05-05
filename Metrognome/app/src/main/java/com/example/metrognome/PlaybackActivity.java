@@ -3,29 +3,31 @@ package com.example.metrognome;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SimpleAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.CompoundButton;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
+import com.example.metrognome.editor.MeasureAdapter;
 import com.example.metrognome.time.Measure;
-import com.example.metrognome.time.MeasureRunnable;
+import com.example.metrognome.time.Rhythm;
+import com.example.metrognome.time.RhythmRunnable;
 
 /**
  * An activity for handling playback of a metronome.
  */
 public class PlaybackActivity extends AppCompatActivity {
-    private EditText editText;
-    private Button startStopButton;
+    private TextView titleTextView;
+    private NumberPicker numberPicker;
+    private ToggleButton playPauseButton;
     private SoundPoolWrapper soundPool;
     private Handler handler;
-    private boolean running;
-    private Measure measure = Measure.CLAVE;
-    private MeasureRunnable measureRunnable;
-    private Spinner spinner;
+    private Rhythm rhythm;
+    private RhythmRunnable rhythmRunnable;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,58 +36,49 @@ public class PlaybackActivity extends AppCompatActivity {
         init();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     private void init() {
-        editText = findViewById(R.id.bpm_edit_text);
-        spinner = findViewById(R.id.spinner);
-        startStopButton = findViewById(R.id.start_stop_button);
-        startStopButton.setOnClickListener(new View.OnClickListener() {
+        rhythm = Rhythm.RUMBA_CLAVE;
+
+        titleTextView = findViewById(R.id.text_view_title);
+        titleTextView.setText(rhythm.getName());
+
+        recyclerView = findViewById(R.id.recycler_view_measure);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(new MeasureAdapter(this, rhythm));
+
+        numberPicker = findViewById(R.id.number_picker_tempo);
+        numberPicker.setMinValue(Measure.MIN_BPM);
+        numberPicker.setMaxValue(Measure.MAX_BPM);
+        numberPicker.setValue(rhythm.getTempo());
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void onClick(View v) {
-                boolean valid = setBeatsPerMinute();
-                if (valid) {
-                    if (running) {
-                        stopPlayer();
-                        startStopButton.setText(R.string.start);
-                    } else {
-                        startPlayer();
-                        startStopButton.setText(R.string.stop);
-                    }
-                    running = !running;
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                rhythm.setTempo(newVal);
+            }
+        });
+
+        playPauseButton = findViewById(R.id.button_play_pause);
+        playPauseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    startPlayer();
+                } else {
+                    stopPlayer();
                 }
             }
         });
 
         soundPool = new SoundPoolWrapper(this);
         handler = new Handler();
-        measureRunnable = new MeasureRunnable(measure, handler, soundPool);
+        rhythmRunnable = new RhythmRunnable(rhythm, handler, soundPool);
     }
 
     private void startPlayer() {
-        handler.post(measureRunnable);
+        handler.post(rhythmRunnable);
     }
 
     private void stopPlayer() {
         handler.removeCallbacksAndMessages(null);
-    }
-
-    private boolean setBeatsPerMinute() {
-        try {
-            int bpm = Integer.parseInt(editText.getText().toString());
-            if (bpm >= 1 && bpm <= 600) {
-                measure.setTempo(bpm);
-                return true;
-            } else {
-                Toast.makeText(this, "Invalid BPM: Integer must be between 1 and 600.", Toast.LENGTH_SHORT).show();
-
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid BPM: Not an integer.", Toast.LENGTH_SHORT).show();
-        }
-        return false;
     }
 }
