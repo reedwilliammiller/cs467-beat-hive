@@ -8,6 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.metrognome.rhythmDB.RhythmEntity;
+import com.example.metrognome.rhythmDB.RhythmListAdapter;
+import com.example.metrognome.rhythmDB.RhythmViewModel;
+
 import java.util.List;
 
 public class SelectionActivity extends AppCompatActivity {
@@ -26,13 +30,15 @@ public class SelectionActivity extends AppCompatActivity {
 
         mRhythmViewModel = ViewModelProviders.of(this).get(RhythmViewModel.class);
 
-        mRhythmViewModel.getAllRhythms().observe(this, new Observer<List<Rhythm>>() {
+        mRhythmViewModel.getAllRhythms().observe(this, new Observer<List<RhythmEntity>>() {
             @Override
-            public void onChanged(@Nullable final List<Rhythm> rhythms) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setRhythms(rhythms);
+            public void onChanged(@Nullable final List<RhythmEntity> rhythmEntities) {
+                // Update the cached copy of the rhythmEntities in the adapter.
+                adapter.setRhythms(rhythmEntities);
             }
         });
     }
-    }
+
+
+}
 

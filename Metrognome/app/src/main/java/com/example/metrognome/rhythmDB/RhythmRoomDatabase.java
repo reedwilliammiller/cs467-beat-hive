@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 
-@Database(entities = {Rhythm.class}, version = 1)
+@Database(entities = {RhythmEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({TimestampConverter.class})
 public abstract class RhythmRoomDatabase extends RoomDatabase {
     public abstract RhythmDao rhythmDao();
@@ -52,18 +52,18 @@ public abstract class RhythmRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
-            Rhythm rhythm = new Rhythm(0, "My Phat Beat", "beat.json", true);
-            mDao.insert(rhythm);
-            rhythm = new Rhythm(0, "My Phat Beat 2", "beat2.json", true);
-            mDao.insert(rhythm);
-            rhythm = new Rhythm(0, "My Phat Beat 3", "beat3.json", true);
-            mDao.insert(rhythm);
-            rhythm = new Rhythm(0, "My Phat Beat 4", "beat4.json", true);
-            mDao.insert(rhythm);
-            rhythm = new Rhythm(0, "My Phat Beat 5", "beat5.json", true);
-            mDao.insert(rhythm);
-            rhythm = new Rhythm(0, "Mambo #5", "beat6.json", true);
-            mDao.insert(rhythm);
+            RhythmEntity rhythmEntity = new RhythmEntity(0, "My Phat Beat", "beat.json", true);
+            mDao.insert(rhythmEntity);
+            rhythmEntity = new RhythmEntity(0, "My Phat Beat 2", "beat2.json", true);
+            mDao.insert(rhythmEntity);
+            rhythmEntity = new RhythmEntity(0, "My Phat Beat 3", "beat3.json", true);
+            mDao.insert(rhythmEntity);
+            rhythmEntity = new RhythmEntity(0, "My Phat Beat 4", "beat4.json", true);
+            mDao.insert(rhythmEntity);
+            rhythmEntity = new RhythmEntity(0, "My Phat Beat 5", "beat5.json", true);
+            mDao.insert(rhythmEntity);
+            rhythmEntity = new RhythmEntity(0, "Mambo #5", "beat6.json", true);
+            mDao.insert(rhythmEntity);
             return null;
         }
     }

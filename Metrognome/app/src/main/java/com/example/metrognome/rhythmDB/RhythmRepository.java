@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -14,8 +14,8 @@ import java.util.List;
 public class RhythmRepository {
 
     private RhythmDao mRhythmDao;
-    private LiveData<List<Rhythm>> mAllRhythms;
-    private LiveData<List<Rhythm>> mRecentRhythms;
+    private LiveData<List<RhythmEntity>> mAllRhythms;
+    private LiveData<List<RhythmEntity>> mRecentRhythms;
 
     RhythmRepository(Application application) {
         RhythmRoomDatabase db = RhythmRoomDatabase.getDatabase(application);
@@ -24,19 +24,19 @@ public class RhythmRepository {
         mRecentRhythms = mRhythmDao.getRecentRhythms();
     }
 
-    LiveData<List<Rhythm>> getAllRhythms() {
+    LiveData<List<RhythmEntity>> getAllRhythms() {
         return mAllRhythms;
     }
 
-    LiveData<List<Rhythm>> getRecentRhythms() {
+    LiveData<List<RhythmEntity>> getRecentRhythms() {
         return mRecentRhythms;
     }
 
-    public void insert (Rhythm rhythm) {
-        new insertAsyncTask(mRhythmDao).execute(rhythm);
+    public void insert (RhythmEntity rhythmEntity) {
+        new insertAsyncTask(mRhythmDao).execute(rhythmEntity);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Rhythm, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
 
         private RhythmDao mAsyncTaskDao;
 
@@ -45,7 +45,7 @@ public class RhythmRepository {
         }
 
         @Override
-        protected Void doInBackground(final Rhythm... params) {
+        protected Void doInBackground(final RhythmEntity... params) {
             mAsyncTaskDao.insert(params[0]);
             return null;
         }

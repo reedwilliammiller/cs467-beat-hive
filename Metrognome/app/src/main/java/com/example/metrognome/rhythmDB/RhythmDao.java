@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -11,14 +11,14 @@ import java.util.List;
 public interface RhythmDao {
 
     @Insert
-    void insert(Rhythm rhythm);
+    void insert(RhythmEntity rhythmEntity);
 
     @Query("DELETE FROM rhythm_table")
     void deleteAll();
 
     @Query("SELECT * from rhythm_table ORDER BY opened DESC")
-    LiveData<List<Rhythm>> getAllRhythms();
+    LiveData<List<RhythmEntity>> getAllRhythms();
 
     @Query("SELECT * from rhythm_table ORDER BY opened DESC LIMIT 3")
-    LiveData<List<Rhythm>> getRecentRhythms();
+    LiveData<List<RhythmEntity>> getRecentRhythms();
 }

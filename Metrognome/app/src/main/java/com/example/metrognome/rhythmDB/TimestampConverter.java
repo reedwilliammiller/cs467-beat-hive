@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.arch.persistence.room.TypeConverter;
 

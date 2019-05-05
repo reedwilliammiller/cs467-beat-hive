@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -11,19 +11,17 @@ import java.util.List;
 // Handles holding and processing rhythm data from database so the Activities can only handle
 // drawing data to the screen
 
-public class RhythmViewModel extends AndroidViewModel {
+public class RecentRhythmViewModel extends AndroidViewModel {
     private RhythmRepository mRepository;
 
-    private LiveData<List<Rhythm>> mAllRhythms;
+    private LiveData<List<RhythmEntity>> mRecentRhythms;
 
-    public RhythmViewModel (Application application) {
+    public RecentRhythmViewModel(Application application) {
         super(application);
         mRepository = new RhythmRepository(application);
-        mAllRhythms = mRepository.getAllRhythms();
+        mRecentRhythms = mRepository.getRecentRhythms();
     }
 
-    LiveData<List<Rhythm>> getAllRhythms() { return mAllRhythms; }
-
-    public void insert(Rhythm rhythm) { mRepository.insert(rhythm); }
+    public LiveData<List<RhythmEntity>> getRecentRhythms() { return mRecentRhythms; }
 
 }

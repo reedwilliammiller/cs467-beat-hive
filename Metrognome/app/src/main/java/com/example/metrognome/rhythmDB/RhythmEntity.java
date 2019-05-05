@@ -1,4 +1,4 @@
-package com.example.metrognome;
+package com.example.metrognome.rhythmDB;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 
 @Entity(tableName = "rhythm_table")
-public class Rhythm {
+public class RhythmEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -21,7 +21,7 @@ public class Rhythm {
     @ColumnInfo(name = "title")
         private String title;
 
-    public Rhythm(int id, @NonNull String title, @NonNull String filename, @NonNull boolean asset) {
+    public RhythmEntity(int id, @NonNull String title, @NonNull String filename, @NonNull boolean asset) {
         this.id = id;
         this.title = title;
         this.filename = filename;
