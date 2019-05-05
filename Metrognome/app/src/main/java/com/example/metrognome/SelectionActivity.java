@@ -1,27 +1,45 @@
-package com.example.metrognome;
-
-import android.content.Context;
-import android.content.Intent;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Selection;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import java.io.File;
+import com.example.metrognome.R;
+import com.example.metrognome.rhythmDB.RhythmEntity;
+import com.example.metrognome.rhythmDB.RhythmListAdapter;
+import com.example.metrognome.rhythmDB.RhythmViewModel;
+
+import java.util.List;
+
+Apackage com.example.metrognome;
 
 public class SelectionActivity extends AppCompatActivity {
+    private RhythmViewModel mRhythmViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerviewrhythms);
+        final RhythmListAdapter adapter = new RhythmListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mRhythmViewModel = ViewModelProviders.of(this).get(RhythmViewModel.class);
+
+        mRhythmViewModel.getAllRhythms().observe(this, new Observer<List<RhythmEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<RhythmEntity> rhythmEntities) {
+                // Update the cached copy of the rhythmEntities in the adapter.
+                adapter.setRhythms(rhythmEntities);
+            }
+        });
     }
 
-    public void startPlayback(View view) {
-        Intent startSelectionActivity = new Intent(this, SelectionActivity.class);
-        startActivity(startSelectionActivity);
-    }
 
 }
+
