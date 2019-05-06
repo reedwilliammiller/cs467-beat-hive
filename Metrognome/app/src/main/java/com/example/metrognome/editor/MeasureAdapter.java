@@ -39,14 +39,14 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
 
     @Override
     public void onBindViewHolder(BeatViewHolder holder, int position) {
-        final Beat beat = rhythm.getBeatAt(position);
+        final Beat beat = rhythm.getBeatAt(position % rhythm.getBeatCount());
         holder.beat = beat;
         holder.init();
     }
 
     @Override
     public int getItemCount() {
-        return rhythm.getBeatCount();
+        return Integer.MAX_VALUE;
     }
 
     public class BeatViewHolder extends RecyclerView.ViewHolder {

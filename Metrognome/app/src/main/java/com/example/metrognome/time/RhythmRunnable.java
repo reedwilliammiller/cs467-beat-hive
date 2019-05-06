@@ -1,6 +1,7 @@
 package com.example.metrognome.time;
 
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
@@ -8,11 +9,15 @@ public class RhythmRunnable implements Runnable {
     private Rhythm rhythm;
     private Handler handler;
     private SoundPoolWrapper soundPool;
+    private RecyclerView recyclerView;
+    private int iterations;
 
-    public RhythmRunnable(Rhythm rhythm, Handler handler, SoundPoolWrapper soundPool) {
+    public RhythmRunnable(RecyclerView recyclerView, Rhythm rhythm, Handler handler, SoundPoolWrapper soundPool) {
         this.rhythm = rhythm;
         this.handler = handler;
         this.soundPool = soundPool;
+        this.recyclerView = recyclerView;
+        this.iterations = 1;
     }
 
     @Override
@@ -31,6 +36,8 @@ public class RhythmRunnable implements Runnable {
                             measure.playBeatAtSubdivisionAt(beatIndex, subdivisionIndex, soundPool);
                         }
                     }, subdivisionOffset);
+                    recyclerView.smoothScrollToPosition(rhythm.getBeatCount() * iterations);
+                    iterations++;
                 }
             }
         }

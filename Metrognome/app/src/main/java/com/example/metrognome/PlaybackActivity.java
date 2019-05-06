@@ -3,13 +3,13 @@ package com.example.metrognome;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.metrognome.animation.ScrollingLayoutManager;
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.editor.MeasureAdapter;
 import com.example.metrognome.time.Measure;
@@ -28,6 +28,7 @@ public class PlaybackActivity extends AppCompatActivity {
     private Rhythm rhythm;
     private RhythmRunnable rhythmRunnable;
     private RecyclerView recyclerView;
+    private ScrollingLayoutManager scroller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,8 @@ public class PlaybackActivity extends AppCompatActivity {
         titleTextView.setText(rhythm.getName());
 
         recyclerView = findViewById(R.id.recycler_view_measure);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        scroller = new ScrollingLayoutManager(this);
+        recyclerView.setLayoutManager(scroller);
         recyclerView.setAdapter(new MeasureAdapter(this, rhythm));
 
         numberPicker = findViewById(R.id.number_picker_tempo);
@@ -71,14 +73,16 @@ public class PlaybackActivity extends AppCompatActivity {
 
         soundPool = new SoundPoolWrapper(this);
         handler = new Handler();
-        rhythmRunnable = new RhythmRunnable(rhythm, handler, soundPool);
+        rhythmRunnable = new RhythmRunnable(recyclerView, rhythm, handler, soundPool);
     }
 
     private void startPlayer() {
+        scroller.setRhythm(rhythm);
         handler.post(rhythmRunnable);
     }
 
     private void stopPlayer() {
         handler.removeCallbacksAndMessages(null);
+        recyclerView.scrollToPosition(0);
     }
 }
