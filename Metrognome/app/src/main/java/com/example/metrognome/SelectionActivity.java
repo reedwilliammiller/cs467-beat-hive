@@ -1,3 +1,4 @@
+package com.example.metrognome;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -6,14 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.metrognome.R;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmListAdapter;
 import com.example.metrognome.rhythmDB.RhythmViewModel;
 
 import java.util.List;
-
-Apackage com.example.metrognome;
 
 public class SelectionActivity extends AppCompatActivity {
     private RhythmViewModel mRhythmViewModel;
