@@ -2,6 +2,7 @@ package com.example.metrognome.time;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.List;
 /**
  * Represents an entire rhythm which is a sequence of measures.
  */
-public class Rhythm implements Iterable<Measure> {
+public class Rhythm implements Iterable<Measure>, Serializable {
     private List<Measure> measures = new ArrayList<>();
     private String name;
-    public int tempo;
+    private int tempo;
 
     public static Rhythm RUMBA_CLAVE;
     static {

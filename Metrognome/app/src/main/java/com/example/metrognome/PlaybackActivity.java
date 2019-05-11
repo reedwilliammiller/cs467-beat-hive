@@ -1,8 +1,9 @@
 package com.example.metrognome;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.CompoundButton;
@@ -12,6 +13,7 @@ import android.widget.ToggleButton;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.editor.MeasureAdapter;
+import com.example.metrognome.rhythmDB.RhythmDao;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
@@ -28,6 +30,7 @@ public class PlaybackActivity extends AppCompatActivity {
     private Rhythm rhythm;
     private RhythmRunnable rhythmRunnable;
     private RecyclerView recyclerView;
+    private RhythmDao mRhythmDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,10 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void init() {
-        rhythm = Rhythm.RUMBA_CLAVE;
+        Intent intent = getIntent();
+        int ID = intent.getIntExtra("ID", 0);
+
+        rhythm = mRhythmDao.getRhythmById(ID);
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(rhythm.getName());
