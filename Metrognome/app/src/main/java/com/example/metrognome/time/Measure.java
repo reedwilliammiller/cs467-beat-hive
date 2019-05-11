@@ -12,9 +12,14 @@ import java.util.List;
  * Represents a measure of time.
  */
 public class Measure implements Iterable<Beat> {
+    public static final int MAX_BPM = 400;
+    public static final int MIN_BPM = 1;
+
     private static final long MILLIS_PER_BPM = 60000;
     private static final int DEFAULT_TEMPO = 60;
 
+    private Rhythm rhythm;
+    private int index;
     private TimeSignature timeSignature;
     private int tempo;
     private List<Beat> beats = new ArrayList<>();
@@ -22,30 +27,20 @@ public class Measure implements Iterable<Beat> {
     /**
      * Creates a simple measure of 4/4 time at 60 bpm.
      */
-    public Measure() {
-        this(TimeSignature.COMMON_TIME, DEFAULT_TEMPO);
-    }
-
-    public static Measure CLAVE = new Measure();
-    static {
-        CLAVE.getBeatAt(0).subdivideBy(4);
-        CLAVE.getBeatAt(1).subdivideBy(4);
-        CLAVE.getBeatAt(2).subdivideBy(4);
-        CLAVE.getBeatAt(3).subdivideBy(4);
-
-        CLAVE.getBeatAt(0).setSoundAt(3, SoundPoolWrapper.DEFAULT_SOUND);
-        CLAVE.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        CLAVE.getBeatAt(1).setSoundAt(3, SoundPoolWrapper.DEFAULT_SOUND);
-        CLAVE.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        CLAVE.getBeatAt(2).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+    public Measure(Rhythm rhythm, int index) {
+        this(rhythm, index, TimeSignature.COMMON_TIME, DEFAULT_TEMPO);
     }
 
     /**
      * Create a measure with the given {@link TimeSignature} and tempo in BPM.
+     * @param rhythm the rhythm that this measure belongs to
+     * @param index the index of this measure
      * @param timeSignature the time signature (i.e. 4/4)
      * @param tempo the tempo in BPM.
      */
-    public Measure(TimeSignature timeSignature, int tempo) {
+    public Measure(Rhythm rhythm, int index, TimeSignature timeSignature, int tempo) {
+        this.rhythm = rhythm;
+        this.index = index;
         setTimeSignature(timeSignature);
         setTempo(tempo);
     }
@@ -57,7 +52,7 @@ public class Measure implements Iterable<Beat> {
     public void setTimeSignature(TimeSignature timeSignature) {
         this.timeSignature = timeSignature;
         for (int i = 0; i < timeSignature.getBeats(); i++) {
-            beats.add(new Beat());
+            beats.add(new Beat(this, i));
         }
     }
 
@@ -66,8 +61,8 @@ public class Measure implements Iterable<Beat> {
      * @param tempo the tempo in bpm.
      */
     public void setTempo(int tempo) {
-        if (tempo < 1 || tempo >= 600) {
-            throw new IllegalArgumentException("Tempo must be between 1 and 600: " + tempo);
+        if (tempo < MIN_BPM || tempo >= MAX_BPM) {
+            throw new IllegalArgumentException(String.format("Tempo must be between %d and %d: %d", MIN_BPM, MAX_BPM, tempo));
         }
         this.tempo = tempo;
     }
@@ -113,9 +108,31 @@ public class Measure implements Iterable<Beat> {
         getBeatAt(index).playSubdivisionAt(subdivision, soundPool);
     }
 
+    public Rhythm getRhythm() {
+        return rhythm;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
     @NonNull
     @Override
     public Iterator<Beat> iterator() {
         return beats.iterator();
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Measure: \n");
+        stringBuilder.append("TimeSignature: " + timeSignature + "\n");
+        for (int i = 0; i < beats.size(); i++) {
+            stringBuilder.append(beats.get(i));
+            if (i != beats.size() - 1) {
+                stringBuilder.append(",");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
     }
 }

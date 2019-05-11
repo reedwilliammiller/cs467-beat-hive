@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/playback_control_container_height"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:id="@+id/playback_controls_container">
+
+    <ToggleButton
+        android:id="@+id/button_repeat"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/playback_control_repeat_margin_start"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/ic_repeat" />
+
+    <ToggleButton
+        android:id="@+id/button_play_pause"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/ic_play_pause" />
+
+    <TextView
+        android:id="@+id/text_view_tempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number_picker_tempo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:text="Tempo" />
+
+    <NumberPicker
+        android:id="@+id/number_picker_tempo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/text_view_tempo"
+        app:layout_constraintEnd_toEndOf="@id/text_view_tempo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_view_tempo"
+
+        >
+
+    </NumberPicker>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/playback_edit_button_text"
+        app:layout_constraintEnd_toStartOf="@id/text_view_tempo"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

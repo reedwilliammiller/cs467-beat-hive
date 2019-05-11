@@ -27,6 +27,7 @@ public class SoundPoolWrapper {
         init(context);
     }
 
+    @SuppressWarnings("deprecation")
     private void init(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()

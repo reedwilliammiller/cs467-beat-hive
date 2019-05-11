@@ -11,4 +11,9 @@
     <string name="mambo_5">Mambo #5</string>
     <string name="mambo_7">mambo #7</string>
     <string name="mambo_6">Mambo #6</string>
+    <string name="playback_edit_button_text">Edit</string>
+    <string name="e_mnemonic">e</string>
+    <string name="and_mnemonic">+</string>
+    <string name="a_mnemonic">a</string>
+    <string name="button_subdivide_text">subdivide</string>
 </resources>
