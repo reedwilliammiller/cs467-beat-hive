@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlaybackActivity" />
-        <activity android:name=".ReadWriteBeatsActivity" />
+        <activity android:name=".SelectionActivity" />
     </application>
 
 </manifest>

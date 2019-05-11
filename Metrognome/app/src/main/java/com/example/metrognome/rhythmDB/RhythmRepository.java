@@ -18,7 +18,7 @@ public class RhythmRepository {
     private LiveData<List<RhythmEntity>> mRecentRhythms;
 
     RhythmRepository(Application application) {
-        RhythmRoomDatabase db = RhythmRoomDatabase.getDatabase(application);
+        AppDatabase db = AppDatabase.getDatabase(application);
         mRhythmDao = db.rhythmDao();
         mAllRhythms = mRhythmDao.getAllRhythms();
         mRecentRhythms = mRhythmDao.getRecentRhythms();

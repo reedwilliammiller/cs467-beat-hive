@@ -2,26 +2,28 @@ package com.example.metrognome.rhythmProcessor;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.Serializable;
 
-public class rhythmObject {
-    private String title;
-    private String author;
-    private Integer last_bpm;
-    private Date last_modified;
-    private Date created;
+public class RhythmObject implements Serializable{
+    public String title;
+    public String author;
+    public Integer last_bpm;
+    public Date last_modified;
+    public Date created;
 
     //Measures is an array of measure objects
-    private ArrayList<measureObject> measures;
+    private ArrayList<MeasureObject> measures;
 
 
     //Constructor
-    public rhythmObject(String title, String author, Integer top, Integer bottom){
+    public RhythmObject(String title, String author, Integer top, Integer bottom){
         this.title = title;
         this.author = author;
         this.last_bpm = 60;
         this.last_modified = new Date(System.currentTimeMillis());
         this.created = new Date(System.currentTimeMillis());
-        measureObject firstMeasure = new measureObject(top, bottom);
+        MeasureObject firstMeasure = new MeasureObject(top, bottom);
+        this.measures = new ArrayList<>();
         this.measures.add(firstMeasure);
     }
 
@@ -46,7 +48,7 @@ public class rhythmObject {
         return created;
     }
 
-    public ArrayList<measureObject> getMeasures(){
+    public ArrayList<MeasureObject> getMeasures(){
         return measures;
     }
 
@@ -68,7 +70,7 @@ public class rhythmObject {
     }
 
     //add a measure to the end of the measures list
-    public void addMeasure(measureObject measure){
+    public void addMeasure(MeasureObject measure){
         measures.add(measure);
     }
 
