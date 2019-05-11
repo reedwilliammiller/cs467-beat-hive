@@ -9,7 +9,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.example.metrognome.rhythmProcessor.RhythmObject;
+import com.example.metrognome.audio.SoundPoolWrapper;
+import com.example.metrognome.time.Measure;
+import com.example.metrognome.time.Rhythm;
+import com.example.metrognome.time.TimeSignature;
 
 
 @Database(entities = {RhythmEntity.class}, version = 1, exportSchema = false)
@@ -54,8 +57,25 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
-            RhythmObject phatBeat = new RhythmObject("My Phat Beat", "DJ Adam", 4, 4);
-            RhythmEntity rhythmEntity = new RhythmEntity(0, phatBeat.title, phatBeat);
+            Rhythm RUMBA_CLAVE = new Rhythm("Rumba Clave", 120);
+
+            Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+
+            Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            second.getBeatAt(1).subdivideBy(2);
+            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(3).subdivideBy(2);
+            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+
+            RUMBA_CLAVE.addMeasure(first);
+            RUMBA_CLAVE.addMeasure(second);
+
+            RhythmEntity rhythmEntity = new RhythmEntity(0, "Rumba Clave", RUMBA_CLAVE);
             mDao.insert(rhythmEntity);
             return null;
         }

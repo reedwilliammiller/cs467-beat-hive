@@ -8,15 +8,8 @@
     <Button
         android:id="@+id/rhythmOpenButton"
         style="@style/rhythm_title"
-        android:layout_width="229dp"
+        android:layout_width="278dp"
         android:layout_height="match_parent" />
-
-    <ImageButton
-        android:id="@+id/rhythmEditButton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_edit" />
-
     <ImageButton
         android:id="@+id/rhythmTrashButton"
         android:layout_width="wrap_content"

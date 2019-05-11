@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
-import com.example.metrognome.rhythmProcessor.RhythmObject;
+import com.example.metrognome.time.Rhythm;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity(tableName = "rhythm_table")
 @TypeConverters({TimestampConverter.class, RhythmObjectConverter.class})
 public class RhythmEntity {
-    public RhythmEntity(int id, @NonNull String title, RhythmObject rhythm) {
+    public RhythmEntity(int id, @NonNull String title, Rhythm rhythm) {
         this.id = id;
         this.title = title;
         this.rhythm = rhythm;
@@ -43,11 +43,11 @@ public class RhythmEntity {
         this.opened = opened;
     }
 
-    private RhythmObject rhythm;
-    public RhythmObject getRhythm() {
+    private Rhythm rhythm;
+    public Rhythm getRhythm() {
         return rhythm;
     }
-    public void setRhythm(RhythmObject rhythm) {
+    public void setRhythm(Rhythm rhythm) {
         this.rhythm = rhythm;
     }
 }

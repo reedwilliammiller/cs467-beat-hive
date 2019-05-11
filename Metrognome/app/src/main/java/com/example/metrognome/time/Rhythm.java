@@ -12,7 +12,7 @@ import java.util.List;
 public class Rhythm implements Iterable<Measure> {
     private List<Measure> measures = new ArrayList<>();
     private String name;
-    private int tempo;
+    public int tempo;
 
     public static Rhythm RUMBA_CLAVE;
     static {
