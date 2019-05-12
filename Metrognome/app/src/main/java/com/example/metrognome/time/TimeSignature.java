@@ -1,11 +1,9 @@
 package com.example.metrognome.time;
 
-import java.io.Serializable;
-
 /**
  * Represents a time signature such as 3/4 or 5/8 time.
  */
-public class TimeSignature implements Serializable {
+public class TimeSignature {
     private final int beats;
     private final int note;
 

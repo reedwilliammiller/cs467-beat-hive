@@ -2,14 +2,13 @@ package com.example.metrognome.time;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents an audible or inaudible series of notes that are subdivided.
  */
-public class Beat implements Serializable {
+public class Beat {
     private Measure measure;
     private int index;
     private List<Integer> soundIds = new ArrayList<>();

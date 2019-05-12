@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 /**
  * Represents a measure of time.
  */
-public class Measure implements Iterable<Beat>, Serializable {
+public class Measure implements Iterable<Beat> {
     public static final int MAX_BPM = 400;
     public static final int MIN_BPM = 1;
 
