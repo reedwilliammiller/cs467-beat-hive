@@ -2,7 +2,7 @@ package com.example.metrognome.rhythmDB;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.example.metrognome.rhythmProcessor.RhythmObject;
+import com.example.metrognome.time.Rhythm;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 
 public class RhythmObjectConverter {
     @TypeConverter
-    public RhythmObject fromSerialrhythmObject(String value) {
+    public Rhythm fromSerialrhythmObject(String value) {
         if (value == null){
             return null;
         }
@@ -22,7 +22,7 @@ public class RhythmObjectConverter {
                 ByteArrayInputStream in = new ByteArrayInputStream(serialized);
                 ObjectInputStream oin = null;
                 oin = new ObjectInputStream(in);
-                RhythmObject rhythm = (RhythmObject) oin.readObject();
+                Rhythm rhythm = (Rhythm) oin.readObject();
                 return rhythm;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -35,7 +35,7 @@ public class RhythmObjectConverter {
     }
 
     @TypeConverter
-    public String rhythmObjectToSerial(RhythmObject rhythm) {
+    public String rhythmObjectToSerial(Rhythm rhythm) {
         if (rhythm == null) {
             return null;
         } else {

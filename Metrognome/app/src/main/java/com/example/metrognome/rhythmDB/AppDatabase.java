@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.example.metrognome.rhythmProcessor.RhythmObject;
+import com.example.metrognome.time.Rhythm;
 
 
 @Database(entities = {RhythmEntity.class}, version = 1, exportSchema = false)
@@ -54,9 +54,18 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
-            RhythmObject phatBeat = new RhythmObject("My Phat Beat", "DJ Adam", 4, 4);
-            RhythmEntity rhythmEntity = new RhythmEntity(0, phatBeat.title, phatBeat);
+            Rhythm phatBeat = new Rhythm("My Phat Beat", 120);
+            RhythmEntity rhythmEntity = new RhythmEntity(0, phatBeat.getName(), phatBeat);
             mDao.insert(rhythmEntity);
+            Rhythm phatBeat1 = new Rhythm("My Phat Beat 2", 120);
+            RhythmEntity rhythmEntity1 = new RhythmEntity(0, phatBeat1.getName(), phatBeat);
+            mDao.insert(rhythmEntity1);
+            Rhythm phatBeat2 = new Rhythm("My Phat Beat 3", 120);
+            RhythmEntity rhythmEntity2 = new RhythmEntity(0, phatBeat2.getName(), phatBeat);
+            mDao.insert(rhythmEntity2);
+            Rhythm phatBeat3 = new Rhythm("My Phat Beat 4", 120);
+            RhythmEntity rhythmEntity3 = new RhythmEntity(0, phatBeat3.getName(), phatBeat);
+            mDao.insert(rhythmEntity3);
             return null;
         }
     }
