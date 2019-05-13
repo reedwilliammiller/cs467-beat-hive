@@ -16,5 +16,5 @@ Instructions for installing using Android Studio.
 
 Instructions for installing using the APK.
 
-1. Download the APK here. (needs a link)
+1. Download the APK [here](./assets/apk/app-release-unsigned.apk).
 2. Install on a compatible API level 27 Android platform.
