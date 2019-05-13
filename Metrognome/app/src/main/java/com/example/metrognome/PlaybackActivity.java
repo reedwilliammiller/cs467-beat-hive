@@ -81,4 +81,11 @@ public class PlaybackActivity extends AppCompatActivity {
     private void stopPlayer() {
         handler.removeCallbacksAndMessages(null);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPlayer();
+    }
+
 }
