@@ -18,12 +18,11 @@ public class RhythmRepository {
     private LiveData<List<RhythmEntity>> mRecentRhythms;
     private RhythmEntity mRhythmByID;
 
-    RhythmRepository(Application application, Integer id=0) {
+    RhythmRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         mRhythmDao = db.rhythmDao();
         mAllRhythms = mRhythmDao.getAllRhythms();
         mRecentRhythms = mRhythmDao.getRecentRhythms();
-        mRhythmByID = mRhythmDao.getRhythmById(id)
     }
 
     LiveData<List<RhythmEntity>> getAllRhythms() {
@@ -34,7 +33,6 @@ public class RhythmRepository {
         return mRecentRhythms;
     }
 
-    RhythmEntity getRhythmById() { return mRhythmByID; }
 
     public void insert (RhythmEntity rhythmEntity) {
         new insertAsyncTask(mRhythmDao).execute(rhythmEntity);

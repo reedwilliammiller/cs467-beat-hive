@@ -1,6 +1,5 @@
 package com.example.metrognome;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +13,9 @@ import android.widget.ToggleButton;
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.editor.MeasureAdapter;
 import com.example.metrognome.rhythmDB.RhythmDao;
-import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
-
-import java.util.List;
 
 /**
  * An activity for handling playback of a metronome.
@@ -43,10 +39,7 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void init() {
-       Intent intent = getIntent();
-       int ID = intent.getIntExtra("ID", 0);
-        List<RhythmEntity> rhythms = mRhythmDao.getAllRhythms();
-        System.out.println(ID2);
+
         rhythm = Rhythm.RUMBA_CLAVE;
 
         titleTextView = findViewById(R.id.text_view_title);
