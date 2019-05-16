@@ -8,7 +8,7 @@ import com.example.metrognome.editor.MeasureAdapter;
 import com.example.metrognome.time.Rhythm;
 
 public class EditorActivity extends AppCompatActivity {
-    Rhythm rhythm = Rhythm.RUMBA_CLAVE;
+    Rhythm rhythm = Rhythm.BASIC;
     RecyclerView rv;
     RecyclerView.LayoutManager lm;
     RecyclerView.Adapter adapter;

@@ -1,6 +1,5 @@
 package com.example.metrognome.rhythmProcessor;
 
-import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.TimeSignature;
@@ -42,17 +41,35 @@ public class RhythmJSONConverter {
         }
         rhythm.addProperty("total_measures", rhythmInput.getMeasureCount());
         rhythm.add("measures", measures);
+        System.out.println(rhythm.toString());
         return rhythm.toString();
     }
 
     public static Rhythm fromJSON(String string){
         JsonParser jsonParser = new JsonParser();
         JsonObject rhythmJSON = jsonParser.parse(string).getAsJsonObject();
-        Rhythm rhythm = new Rhythm(rhythmJSON.get("name").getAsString(), rhythmJSON.get("tempo").getAsInt());
-        Measure first = new Measure(rhythm, 0, TimeSignature.COMMON_TIME, rhythm.tempo);
-        first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-
+        int tempo = rhythmJSON.get("tempo").getAsInt();
+        Rhythm rhythm = new Rhythm(rhythmJSON.get("name").getAsString(), tempo);
+        for(int i = 0; i < rhythmJSON.get("total_measures").getAsInt(); i++){
+            JsonObject measureJSON = rhythmJSON.getAsJsonArray("measures").get(i).getAsJsonObject();
+            JsonObject timesigJSON = measureJSON.get("timesignature").getAsJsonObject();
+            int beats = timesigJSON.get("beats").getAsInt();
+            int note = timesigJSON.get("note").getAsInt();
+            TimeSignature timeSignature = new TimeSignature(beats, note);
+            Measure measure = new Measure(rhythm, i, timeSignature, tempo);
+            for(int j = 0; j < beats; j++){
+                JsonObject beatJSON =  measureJSON.getAsJsonArray("beats").get(j).getAsJsonObject();
+                int subDivisions = beatJSON.getAsJsonArray("soundIds").size();
+                if(subDivisions > 1){
+                    measure.getBeatAt(j).subdivideBy(subDivisions);
+                }
+                for(int k = 0; k < subDivisions; k++){
+                    int sound = beatJSON.getAsJsonArray("soundIds").get(k).getAsInt();
+                    measure.getBeatAt(j).setSoundAt(k, sound);
+                }
+            }
+            rhythm.addMeasure(measure);
+        }
         return rhythm;
     }
 

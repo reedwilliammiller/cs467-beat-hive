@@ -44,10 +44,16 @@ public class PlaybackActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         int ID = intent.getIntExtra("ID", 0);
-        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-        Rhythm load = mRhythmObjectViewModel.getRhythm();
-        rhythm = load;
+        if(ID == 0){
+            rhythm = Rhythm.BASIC;
+        }
+        else{
+            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+            Rhythm load = mRhythmObjectViewModel.getRhythm();
+            rhythm = load;
+        }
+
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(rhythm.getName());
