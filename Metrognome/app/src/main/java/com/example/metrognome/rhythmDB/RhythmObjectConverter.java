@@ -8,14 +8,13 @@ import com.example.metrognome.time.Rhythm;
 public class RhythmObjectConverter {
         @TypeConverter
         public Rhythm fromString(String value) {
-            System.out.println("from string " + value);
-            return RhythmJSONConverter.fromJSON(value);
+            Rhythm rhythm = RhythmJSONConverter.fromJSON(value);
+            return rhythm;
         }
 
         @TypeConverter
         public String fromRhythm(Rhythm rhythm) {
             String string = RhythmJSONConverter.toJSON(rhythm);
-            System.out.println("to string " + string);
             return string;
         }
 }

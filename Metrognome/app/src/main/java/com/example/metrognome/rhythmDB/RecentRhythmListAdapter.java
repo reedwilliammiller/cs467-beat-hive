@@ -2,6 +2,7 @@ package com.example.metrognome.rhythmDB;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,9 @@ public class RecentRhythmListAdapter extends RecyclerView.Adapter<RecentRhythmLi
         mContext = context;
         mInflater = LayoutInflater.from(context); }
 
+    @NonNull
     @Override
-    public RhythmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RhythmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.recyclerview_recent_rhythm_file, parent, false);
         return new RhythmViewHolder(itemView);
     }

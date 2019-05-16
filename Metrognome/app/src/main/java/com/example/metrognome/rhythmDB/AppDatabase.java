@@ -29,6 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "rhythm_database")
                             .addCallback(sRoomDatabaseCallback)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
@@ -78,6 +79,28 @@ public abstract class AppDatabase extends RoomDatabase {
             RhythmEntity rhythmEntity = new RhythmEntity(0, RUMBA_CLAVE.getName(), RUMBA_CLAVE);
 
             mDao.insert(rhythmEntity);
+
+            Rhythm RUMBA_CLAVE1 = new Rhythm("Rumba Clave 3", 120);
+
+            Measure first1 = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.getTempo());
+            first1.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            first1.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+
+            Measure second1 = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.getTempo());
+            second1.getBeatAt(1).subdivideBy(2);
+            second1.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second1.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second1.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second1.getBeatAt(3).subdivideBy(2);
+            second1.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second1.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+
+            RUMBA_CLAVE1.addMeasure(first1);
+            RUMBA_CLAVE1.addMeasure(second1);
+
+            RhythmEntity rhythmEntity1 = new RhythmEntity(0, RUMBA_CLAVE1.getName(), RUMBA_CLAVE1);
+
+            mDao.insert(rhythmEntity1);
             return null;
         }
     }
