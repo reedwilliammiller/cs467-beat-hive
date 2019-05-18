@@ -9,8 +9,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.example.metrognome.audio.SoundPoolWrapper;
+import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
-
+import com.example.metrognome.time.TimeSignature;
 
 @Database(entities = {RhythmEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({TimestampConverter.class})
@@ -26,6 +28,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "rhythm_database")
                             .addCallback(sRoomDatabaseCallback)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
@@ -54,20 +57,88 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
-            Rhythm phatBeat = new Rhythm("My Phat Beat", 120);
-            RhythmEntity rhythmEntity = new RhythmEntity(0, phatBeat.getName(), phatBeat);
+
+            Rhythm RUMBA_CLAVE = new Rhythm("Rumba Clave", 120);
+
+            Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+
+            Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            second.getBeatAt(1).subdivideBy(2);
+            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(3).subdivideBy(2);
+            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+
+            RUMBA_CLAVE.addMeasure(first);
+            RUMBA_CLAVE.addMeasure(second);
+
+            RhythmEntity rhythmEntity = new RhythmEntity(0, RUMBA_CLAVE.getName(), RUMBA_CLAVE);
+
             mDao.insert(rhythmEntity);
-            Rhythm phatBeat1 = new Rhythm("My Phat Beat 2", 120);
-            RhythmEntity rhythmEntity1 = new RhythmEntity(0, phatBeat1.getName(), phatBeat);
-            mDao.insert(rhythmEntity1);
-            Rhythm phatBeat2 = new Rhythm("My Phat Beat 3", 120);
-            RhythmEntity rhythmEntity2 = new RhythmEntity(0, phatBeat2.getName(), phatBeat);
-            mDao.insert(rhythmEntity2);
-            Rhythm phatBeat3 = new Rhythm("My Phat Beat 4", 120);
-            RhythmEntity rhythmEntity3 = new RhythmEntity(0, phatBeat3.getName(), phatBeat);
-            mDao.insert(rhythmEntity3);
+
+            Rhythm FOUR = new Rhythm("Four on the Floor", 120);
+            first = new Measure(FOUR, 0, TimeSignature.COMMON_TIME, FOUR.tempo);
+            FOUR.addMeasure(first);
+            rhythmEntity = new RhythmEntity(0, FOUR.getName(), FOUR);
+
+            mDao.insert(rhythmEntity);
+
+            Rhythm SPEED = new Rhythm("Speed Up", 220);
+
+            first = new Measure(SPEED, 0, TimeSignature.COMMON_TIME, SPEED.tempo);
+
+            second = new Measure(SPEED, 1, TimeSignature.COMMON_TIME, SPEED.tempo);
+            second.getBeatAt(0).subdivideBy(2);
+            second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(1).subdivideBy(2);
+            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).subdivideBy(2);
+            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(3).subdivideBy(2);
+            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+
+            SPEED.addMeasure(first);
+            SPEED.addMeasure(second);
+
+            rhythmEntity = new RhythmEntity(0, SPEED.getName(), SPEED);
+
+            mDao.insert(rhythmEntity);
+
+            Rhythm SPORT = new Rhythm("Sports Clap", 120);
+
+            first = new Measure(SPORT, 0, TimeSignature.COMMON_TIME, SPORT.tempo);
+            first.getBeatAt(1).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
+            first.getBeatAt(3).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
+
+            second = new Measure(SPORT, 1, TimeSignature.COMMON_TIME, SPORT.tempo);
+            second.getBeatAt(0).subdivideBy(3);
+            second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(0).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(1).subdivideBy(3);
+            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(1).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).subdivideBy(3);
+            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(2).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            second.getBeatAt(2).setSoundAt(2, SoundPoolWrapper.INAUDIBLE);
+            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+
+            SPORT.addMeasure(first);
+            SPORT.addMeasure(second);
+
+            rhythmEntity = new RhythmEntity(0, SPORT.getName(), SPORT);
+            mDao.insert(rhythmEntity);
             return null;
         }
     }
-
 }

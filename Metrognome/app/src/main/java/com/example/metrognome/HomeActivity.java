@@ -17,7 +17,7 @@ import com.example.metrognome.rhythmDB.RhythmEntity;
 
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity{
+public class HomeActivity extends AppCompatActivity {
     private RecentRhythmViewModel mRecentRhythmViewModel;
 
     @Override
@@ -47,4 +47,6 @@ public class HomeActivity extends AppCompatActivity{
         Intent startSelectionActivity = new Intent(this, SelectionActivity.class);
         startActivity(startSelectionActivity);
     }
+
+
 }

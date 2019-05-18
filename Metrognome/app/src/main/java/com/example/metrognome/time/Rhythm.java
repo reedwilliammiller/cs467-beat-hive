@@ -1,7 +1,5 @@
 package com.example.metrognome.time;
 
-import com.example.metrognome.audio.SoundPoolWrapper;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,27 +10,13 @@ import java.util.List;
 public class Rhythm implements Iterable<Measure> {
     private List<Measure> measures = new ArrayList<>();
     private String name;
-    private int tempo;
+    public int tempo;
 
-    public static Rhythm RUMBA_CLAVE;
+    public static Rhythm BASIC;
     static {
-        RUMBA_CLAVE = new Rhythm("Rumba Clave", 120);
-
-        Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
-        first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-
-        Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
-        second.getBeatAt(1).subdivideBy(2);
-        second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-        second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        second.getBeatAt(3).subdivideBy(2);
-        second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-        second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-
-        RUMBA_CLAVE.addMeasure(first);
-        RUMBA_CLAVE.addMeasure(second);
+        BASIC = new Rhythm("Basic Metronome", 60);
+        Measure first = new Measure(BASIC, 0, TimeSignature.COMMON_TIME, BASIC.tempo);
+        BASIC.addMeasure(first);
     }
 
     public Rhythm(String name, int tempo) {

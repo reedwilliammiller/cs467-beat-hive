@@ -14,6 +14,7 @@ import java.util.List;
 public class RhythmRepository {
 
     private RhythmDao mRhythmDao;
+    private RhythmEntity mRhythmEntity;
     private LiveData<List<RhythmEntity>> mAllRhythms;
     private LiveData<List<RhythmEntity>> mRecentRhythms;
 
@@ -24,6 +25,12 @@ public class RhythmRepository {
         mRecentRhythms = mRhythmDao.getRecentRhythms();
     }
 
+    RhythmRepository(Application application, int ID) {
+        AppDatabase db = AppDatabase.getDatabase(application);
+        mRhythmDao = db.rhythmDao();
+        mRhythmEntity = mRhythmDao.getRhythmById(ID);
+    }
+
     LiveData<List<RhythmEntity>> getAllRhythms() {
         return mAllRhythms;
     }
@@ -31,6 +38,9 @@ public class RhythmRepository {
     LiveData<List<RhythmEntity>> getRecentRhythms() {
         return mRecentRhythms;
     }
+
+    RhythmEntity getmRhythmEntity() { return mRhythmEntity; }
+
 
     public void insert (RhythmEntity rhythmEntity) {
         new insertAsyncTask(mRhythmDao).execute(rhythmEntity);

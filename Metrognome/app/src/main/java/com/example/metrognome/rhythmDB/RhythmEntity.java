@@ -10,6 +10,7 @@ import com.example.metrognome.time.Rhythm;
 import java.util.Date;
 
 
+
 @Entity(tableName = "rhythm_table")
 @TypeConverters({TimestampConverter.class, RhythmObjectConverter.class})
 public class RhythmEntity {

@@ -21,4 +21,7 @@ public interface RhythmDao {
 
     @Query("SELECT * from rhythm_table ORDER BY opened DESC LIMIT 3")
     LiveData<List<RhythmEntity>> getRecentRhythms();
+
+    @Query("SELECT * from rhythm_table WHERE ID = :id LIMIT 1")
+    RhythmEntity getRhythmById(int id);
 }
