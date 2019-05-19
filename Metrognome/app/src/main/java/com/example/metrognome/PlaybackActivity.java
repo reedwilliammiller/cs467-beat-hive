@@ -70,7 +70,7 @@ public class PlaybackActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new MeasureAdapter(this, rhythm, false));
+        recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, false));
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Measure.MIN_BPM);

@@ -52,7 +52,7 @@ public class EditorActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new MeasureAdapter(this, rhythm, true));
+        recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, true));
 
         titleEditText = findViewById(R.id.edit_text_title);
 
@@ -75,7 +75,5 @@ public class EditorActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 }

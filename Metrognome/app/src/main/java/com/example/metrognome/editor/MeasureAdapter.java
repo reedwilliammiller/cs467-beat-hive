@@ -1,5 +1,9 @@
 package com.example.metrognome.editor;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
@@ -21,11 +25,13 @@ import com.example.metrognome.time.Rhythm;
 public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatViewHolder> {
     private static final String TAG = MeasureAdapter.class.getSimpleName();
     private Rhythm rhythm;
-    public LayoutInflater inflater;
+    private LayoutInflater inflater;
     private boolean isEditable;
+    private FragmentManager fragmentManager;
 
-    public MeasureAdapter(Context context, Rhythm rhythm, boolean isEditable) {
+    public MeasureAdapter(Context context, FragmentManager fragmentManager, Rhythm rhythm, boolean isEditable) {
         this.inflater = LayoutInflater.from(context);
+        this.fragmentManager = fragmentManager;
         this.rhythm = rhythm;
         this.isEditable = isEditable;
     }
@@ -57,24 +63,36 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
         private View view;
         private TextView measureTextView;
         private TextView timeSignatureTextView;
+        private View measureView;
 
         public BeatViewHolder(View v) {
             super(v);
             view = v;
         }
+
         public void init() {
             measure = beat.getMeasure();
             rhythm = measure.getRhythm();
             Log.d(TAG, beat.toString());
             boolean isFirstBeat = beat.getIndex() == 0;
 
+            measureView = view.findViewById(R.id.measure_label);
             if (!isFirstBeat) {
-                view.findViewById(R.id.measure_label).setVisibility(View.GONE);
+                measureView.setVisibility(View.GONE);
             } else {
                 measureTextView = view.findViewById(R.id.text_view_measure);
                 timeSignatureTextView = view.findViewById(R.id.text_view_measure_time_signature);
                 measureTextView.setText(measure.getIndex() + 1 + "/" + rhythm.getMeasureCount());
                 timeSignatureTextView.setText(measure.getTimeSignature().getTopSignature() + "/" + measure.getTimeSignature().getBottomSignature());
+                if (isEditable) {
+                    measureView.setBackgroundColor(R.color.colorGray);
+                    measureView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showDialog();
+                        }
+                    });
+                }
             }
 
             updateVisibility();
@@ -180,6 +198,12 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                     updateVisibility();
                 }
             });
+        }
+
+        public void showDialog() {
+            TimeSignatureDialogFragment dialogFragment = new TimeSignatureDialogFragment();
+            dialogFragment.measure = measure;
+            dialogFragment.show(fragmentManager, "TimeSignatureDialog");
         }
     }
 }

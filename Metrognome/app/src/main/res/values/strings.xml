@@ -16,4 +16,8 @@
     <string name="and_mnemonic">+</string>
     <string name="a_mnemonic">a</string>
     <string name="button_subdivide_text">subdivide</string>
+    <string name="time_signature_dialog_title">Time Signature</string>
+    <string name="time_signature_dialog_message">Choose a time signature.</string>
+    <string name="time_signature_dialog_ok">Ok</string>
+    <string name="time_signature_dialog_cancel">Cancel</string>
 </resources>

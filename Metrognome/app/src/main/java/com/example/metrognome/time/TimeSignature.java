@@ -1,9 +1,15 @@
 package com.example.metrognome.time;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Represents a time signature such as 3/4 or 5/8 time.
  */
 public class TimeSignature {
+    public static final List<Integer> TOP_SIGNATURES = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+    public static final List<Integer> BOTTOM_SIGNATURES = Arrays.asList(1, 2, 4);
+
     private final int topSignature;
     private final int bottomSignature;
 
