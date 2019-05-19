@@ -183,6 +183,23 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             removeSubdivision.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    View noteView;
+                    int subdivision = beat.getSubdivisions();
+                    switch (subdivision) {
+                        case 4:
+                            noteView = view.findViewById(R.id.note_4);
+                            break;
+                        case 3:
+                            noteView = view.findViewById(R.id.note_3);
+                            break;
+                        case 2:
+                            noteView = view.findViewById(R.id.note_2);
+                            break;
+                        default:
+                            noteView = view.findViewById(R.id.note_1);
+                    }
+                    ToggleButton noteButton = noteView.findViewById(R.id.button_note);
+                    noteButton.setChecked(false);
                     beat.removeSubdivision();
                     updateVisibility();
                 }
