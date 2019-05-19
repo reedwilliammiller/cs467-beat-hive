@@ -24,18 +24,18 @@
         app:layout_constraintStart_toEndOf="@id/text_view_measure_label" />
 
     <TextView
-        android:id="@+id/text_view_measure_time_signature_label"
+        android:id="@+id/text_view_measure_beat_count_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/text_view_measure_label"
         app:layout_constraintTop_toBottomOf="@id/text_view_measure_label"
-        android:text="Time Signature:" />
+        android:text="Beats:" />
 
     <TextView
-        android:id="@+id/text_view_measure_time_signature"
+        android:id="@+id/text_view_measure_beat_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/measure_title_margin_start"
-        app:layout_constraintTop_toTopOf="@id/text_view_measure_time_signature_label"
-        app:layout_constraintStart_toEndOf="@id/text_view_measure_time_signature_label" />
+        app:layout_constraintTop_toTopOf="@id/text_view_measure_beat_count_label"
+        app:layout_constraintStart_toEndOf="@id/text_view_measure_beat_count_label" />
 </android.support.constraint.ConstraintLayout>

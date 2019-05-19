@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
-import com.example.metrognome.time.TimeSignature;
 
 @Database(entities = {RhythmEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({TimestampConverter.class})
@@ -60,11 +59,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
             Rhythm RUMBA_CLAVE = new Rhythm( 120);
 
-            Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME);
+            Measure first = new Measure(RUMBA_CLAVE, 4);
             first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
             first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
 
-            Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME);
+            Measure second = new Measure(RUMBA_CLAVE, 4);
             second.getBeatAt(1).subdivideBy(2);
             second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
             second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
@@ -81,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
             mDao.insert(rhythmEntity);
 
             Rhythm FOUR = new Rhythm( 120);
-            first = new Measure(FOUR, 0, TimeSignature.COMMON_TIME);
+            first = new Measure(FOUR, 4);
             FOUR.addMeasure(first);
             rhythmEntity = new RhythmEntity(0, "Four on the Floor", FOUR);
 
@@ -89,9 +88,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
             Rhythm SPEED = new Rhythm( 220);
 
-            first = new Measure(SPEED, 0, TimeSignature.COMMON_TIME);
+            first = new Measure(SPEED, 4);
 
-            second = new Measure(SPEED, 1, TimeSignature.COMMON_TIME);
+            second = new Measure(SPEED, 4);
             second.getBeatAt(0).subdivideBy(2);
             second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
             second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
@@ -114,11 +113,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
             Rhythm SPORT = new Rhythm( 120);
 
-            first = new Measure(SPORT, 0, TimeSignature.COMMON_TIME);
+            first = new Measure(SPORT, 4);
             first.getBeatAt(1).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
             first.getBeatAt(3).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
 
-            second = new Measure(SPORT, 1, TimeSignature.COMMON_TIME);
+            second = new Measure(SPORT, 4);
             second.getBeatAt(0).subdivideBy(3);
             second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
             second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);

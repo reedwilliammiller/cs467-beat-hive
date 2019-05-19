@@ -10,16 +10,14 @@ import java.util.List;
  */
 public class Beat {
     private Measure measure;
-    private int index;
     private List<Integer> soundIds = new ArrayList<>();
 
-    public Beat(Measure measure, int index) {
-        this(measure, index, 1);
+    public Beat(Measure measure) {
+        this(measure, 1);
     }
 
-    public Beat(Measure measure, int index, int numSubdivisions) {
+    public Beat(Measure measure, int numSubdivisions) {
         this.measure = measure;
-        this.index = index;
         subdivideBy(numSubdivisions);
     }
 
@@ -63,10 +61,6 @@ public class Beat {
 
     public Measure getMeasure() {
         return measure;
-    }
-
-    public int getIndex() {
-        return this.index;
     }
 
     public String toString() {

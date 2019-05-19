@@ -1,8 +1,5 @@
 package com.example.metrognome.editor;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -47,6 +44,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
     public void onBindViewHolder(BeatViewHolder holder, int position) {
         final Beat beat = rhythm.getBeatAt(position);
         holder.beat = beat;
+
         holder.init();
     }
 
@@ -62,7 +60,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
 
         private View view;
         private TextView measureTextView;
-        private TextView timeSignatureTextView;
+        private TextView beatCountTextView;
         private View measureView;
 
         public BeatViewHolder(View v) {
@@ -74,25 +72,16 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             measure = beat.getMeasure();
             rhythm = measure.getRhythm();
             Log.d(TAG, beat.toString());
-            boolean isFirstBeat = beat.getIndex() == 0;
+            boolean isFirstBeat = measure.getBeatAt(0).equals(beat);
 
             measureView = view.findViewById(R.id.measure_label);
             if (!isFirstBeat) {
                 measureView.setVisibility(View.GONE);
             } else {
                 measureTextView = view.findViewById(R.id.text_view_measure);
-                timeSignatureTextView = view.findViewById(R.id.text_view_measure_time_signature);
-                measureTextView.setText(measure.getIndex() + 1 + "/" + rhythm.getMeasureCount());
-                timeSignatureTextView.setText(measure.getTimeSignature().getTopSignature() + "/" + measure.getTimeSignature().getBottomSignature());
-                if (isEditable) {
-                    measureView.setBackgroundColor(R.color.colorGray);
-                    measureView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showDialog();
-                        }
-                    });
-                }
+                beatCountTextView = view.findViewById(R.id.text_view_measure_beat_count);
+                measureTextView.setText(String.format("%d/%d", rhythm.indexOf(measure) + 1, rhythm.getMeasureCount()));
+                beatCountTextView.setText(String.format("%d", measure.getBeatCount()));
             }
 
             updateVisibility();
@@ -118,7 +107,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 String text;
                 Resources resources = view.getResources();
                 if (subdivisionIndex == 0) {
-                    text = Integer.toString(beat.getIndex() + 1);
+                    text = Integer.toString(measure.indexOf(beat) + 1);
                 } else if (subdivisionIndex == 1) {
                     if (beat.getSubdivisions() == 4) {
                         text = resources.getString(R.string.e_mnemonic);
@@ -198,12 +187,6 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                     updateVisibility();
                 }
             });
-        }
-
-        public void showDialog() {
-            TimeSignatureDialogFragment dialogFragment = new TimeSignatureDialogFragment();
-            dialogFragment.measure = measure;
-            dialogFragment.show(fragmentManager, "TimeSignatureDialog");
         }
     }
 }

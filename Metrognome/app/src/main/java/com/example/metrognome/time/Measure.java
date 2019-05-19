@@ -12,44 +12,26 @@ import java.util.List;
  * Represents a measure of time.
  */
 public class Measure implements Iterable<Beat> {
-    public static final int MAX_BPM = 400;
-    public static final int MIN_BPM = 1;
-
-    private static final long MILLIS_PER_BPM = 60000;
-
     private Rhythm rhythm;
-    private int index;
-    private TimeSignature timeSignature;
     private List<Beat> beats = new ArrayList<>();
 
     /**
-     * Creates a simple measure of 4/4 time at 60 bpm.
+     * Creates a measure with no beats.
+     * @param rhythm the rhythm this measure belongs to
      */
-    public Measure(Rhythm rhythm, int index) {
-        this(rhythm, index, TimeSignature.COMMON_TIME);
+    public Measure(Rhythm rhythm) {
+        this(rhythm, 0);
     }
 
     /**
-     * Create a measure with the given {@link TimeSignature} and tempo in BPM.
+     * Create a measure for the given rhythm with the specified number of beats.
      * @param rhythm the rhythm that this measure belongs to
-     * @param index the index of this measure
-     * @param timeSignature the time signature (i.e. 4/4)
+     * @param numBeats the number of beats to add to this measure.
      */
-    public Measure(Rhythm rhythm, int index, TimeSignature timeSignature) {
+    public Measure(Rhythm rhythm, int numBeats) {
         this.rhythm = rhythm;
-        this.index = index;
-        setTimeSignature(timeSignature);
-    }
-
-    /**
-     * Sets the time signature for the measure and gives default beats.
-     * @param timeSignature the time signature.
-     */
-    public void setTimeSignature(TimeSignature timeSignature) {
-        this.timeSignature = timeSignature;
-        beats.clear();
-        for (int i = 0; i < timeSignature.getTopSignature(); i++) {
-            beats.add(new Beat(this, i));
+        for (int i = 0; i < numBeats; i++) {
+            addBeat(new Beat(this));
         }
     }
 
@@ -70,15 +52,11 @@ public class Measure implements Iterable<Beat> {
     }
 
     private long getMillisPerBeat() {
-        return MILLIS_PER_BPM / getTempo();
+        return rhythm.getMilliesPerBeat();
     }
 
     public int getTempo() {
         return rhythm.getTempo();
-    }
-
-    public TimeSignature getTimeSignature() {
-        return timeSignature;
     }
 
     public Beat getBeatAt(int index) {
@@ -87,6 +65,18 @@ public class Measure implements Iterable<Beat> {
 
     public void setBeatAt(int index, Beat beat) {
         beats.set(index, beat);
+    }
+
+    public void addBeat(Beat beat) {
+        beats.add(beat);
+    }
+
+    public void addBeat(int index, Beat beat) {
+        beats.add(index, beat);
+    }
+
+    public void removeBeat(int index) {
+        beats.remove(index);
     }
 
     public void subdivideBeatAt(int index, int subdivisions) {
@@ -101,8 +91,8 @@ public class Measure implements Iterable<Beat> {
         return rhythm;
     }
 
-    public int getIndex() {
-        return index;
+    public int indexOf(Beat beat) {
+        return beats.indexOf(beat);
     }
 
     @NonNull
@@ -114,7 +104,7 @@ public class Measure implements Iterable<Beat> {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Measure: \n");
-        stringBuilder.append("TimeSignature: " + timeSignature + "\n");
+        stringBuilder.append("Beats: " + getBeatCount() + "\n");
         for (int i = 0; i < beats.size(); i++) {
             stringBuilder.append(beats.get(i));
             if (i != beats.size() - 1) {

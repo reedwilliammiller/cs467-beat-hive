@@ -21,7 +21,6 @@ import com.example.metrognome.intent.IntentBuilder;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
-import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
 
@@ -73,8 +72,8 @@ public class PlaybackActivity extends AppCompatActivity {
         recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, false));
 
         numberPicker = findViewById(R.id.number_picker_tempo);
-        numberPicker.setMinValue(Measure.MIN_BPM);
-        numberPicker.setMaxValue(Measure.MAX_BPM);
+        numberPicker.setMinValue(Rhythm.MIN_BPM);
+        numberPicker.setMaxValue(Rhythm.MAX_BPM);
         numberPicker.setValue(rhythm.getTempo());
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
