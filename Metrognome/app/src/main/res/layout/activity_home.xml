@@ -19,6 +19,7 @@
         android:layout_marginTop="8dp"
         android:drawableStart="@drawable/record_icon"
         android:text="@string/create_new_beat"
+        android:onClick="startEditor"
         app:layout_constraintBottom_toTopOf="@+id/beatLibrary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

@@ -8,34 +8,27 @@ import java.util.List;
  * Represents an entire rhythm which is a sequence of measures.
  */
 public class Rhythm implements Iterable<Measure> {
+    public static final int DEFAULT_TEMPO = 60;
     private List<Measure> measures = new ArrayList<>();
-    private String name;
-    public int tempo;
+    private int tempo;
 
     public static Rhythm BASIC;
     static {
-        BASIC = new Rhythm("Basic Metronome", 60);
-        Measure first = new Measure(BASIC, 0, TimeSignature.COMMON_TIME, BASIC.tempo);
+        BASIC = new Rhythm();
+        Measure first = new Measure(BASIC, 0, TimeSignature.COMMON_TIME);
         BASIC.addMeasure(first);
     }
 
-    public Rhythm(String name, int tempo) {
-        this.name = name;
+    public Rhythm() {
+        this(DEFAULT_TEMPO);
+    }
+
+    public Rhythm(int tempo) {
         this.tempo = tempo;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setTempo(int tempo) {
-        for (Measure measure : measures) {
-            measure.setTempo(tempo);
-        }
+        this.tempo = tempo;
     }
 
     public int getTempo() {

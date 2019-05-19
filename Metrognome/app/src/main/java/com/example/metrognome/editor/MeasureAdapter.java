@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.metrognome.R;
@@ -24,10 +22,12 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
     private static final String TAG = MeasureAdapter.class.getSimpleName();
     private Rhythm rhythm;
     public LayoutInflater inflater;
+    private boolean isEditable;
 
-    public MeasureAdapter(Context context, Rhythm rhythm) {
+    public MeasureAdapter(Context context, Rhythm rhythm, boolean isEditable) {
         this.inflater = LayoutInflater.from(context);
         this.rhythm = rhythm;
+        this.isEditable = isEditable;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 measureTextView = view.findViewById(R.id.text_view_measure);
                 timeSignatureTextView = view.findViewById(R.id.text_view_measure_time_signature);
                 measureTextView.setText(measure.getIndex() + 1 + "/" + rhythm.getMeasureCount());
-                timeSignatureTextView.setText(measure.getTimeSignature().getBeats() + "/" + measure.getTimeSignature().getNote());
+                timeSignatureTextView.setText(measure.getTimeSignature().getTopSignature() + "/" + measure.getTimeSignature().getBottomSignature());
             }
 
             updateVisibility();
@@ -82,7 +82,14 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             setupNote(R.id.note_2, 1);
             setupNote(R.id.note_3, 2);
             setupNote(R.id.note_4, 3);
-            setupSubdivisionButtons();
+            if (isEditable) {
+                setupSubdivisionButtons();
+            } else {
+                ImageView addSubdivision = view.findViewById(R.id.button_add_subdivision);
+                ImageView removeSubdivision = view.findViewById(R.id.button_remove_subdivision);
+                addSubdivision.setVisibility(View.GONE);
+                removeSubdivision.setVisibility(View.GONE);
+            }
         }
 
         private void setupNote(final int noteId, final int subdivisionIndex) {
@@ -115,17 +122,20 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             if (subdivisionIndex < beat.getSubdivisions() && beat.getSoundAt(subdivisionIndex) != SoundPoolWrapper.INAUDIBLE) {
                 noteButton.setChecked(true);
             }
-
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
-                    } else {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
+            if (isEditable) {
+                noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
+                        } else {
+                            beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                noteButton.setEnabled(false);
+            }
         }
 
         private void updateVisibility() {

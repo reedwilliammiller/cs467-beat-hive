@@ -58,13 +58,13 @@ public abstract class AppDatabase extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
 
-            Rhythm RUMBA_CLAVE = new Rhythm("Rumba Clave", 120);
+            Rhythm RUMBA_CLAVE = new Rhythm( 120);
 
-            Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            Measure first = new Measure(RUMBA_CLAVE, 0, TimeSignature.COMMON_TIME);
             first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
             first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
 
-            Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME, RUMBA_CLAVE.tempo);
+            Measure second = new Measure(RUMBA_CLAVE, 1, TimeSignature.COMMON_TIME);
             second.getBeatAt(1).subdivideBy(2);
             second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
             second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
@@ -76,22 +76,22 @@ public abstract class AppDatabase extends RoomDatabase {
             RUMBA_CLAVE.addMeasure(first);
             RUMBA_CLAVE.addMeasure(second);
 
-            RhythmEntity rhythmEntity = new RhythmEntity(0, RUMBA_CLAVE.getName(), RUMBA_CLAVE);
+            RhythmEntity rhythmEntity = new RhythmEntity(0, "Rumba Clave", RUMBA_CLAVE);
 
             mDao.insert(rhythmEntity);
 
-            Rhythm FOUR = new Rhythm("Four on the Floor", 120);
-            first = new Measure(FOUR, 0, TimeSignature.COMMON_TIME, FOUR.tempo);
+            Rhythm FOUR = new Rhythm( 120);
+            first = new Measure(FOUR, 0, TimeSignature.COMMON_TIME);
             FOUR.addMeasure(first);
-            rhythmEntity = new RhythmEntity(0, FOUR.getName(), FOUR);
+            rhythmEntity = new RhythmEntity(0, "Four on the Floor", FOUR);
 
             mDao.insert(rhythmEntity);
 
-            Rhythm SPEED = new Rhythm("Speed Up", 220);
+            Rhythm SPEED = new Rhythm( 220);
 
-            first = new Measure(SPEED, 0, TimeSignature.COMMON_TIME, SPEED.tempo);
+            first = new Measure(SPEED, 0, TimeSignature.COMMON_TIME);
 
-            second = new Measure(SPEED, 1, TimeSignature.COMMON_TIME, SPEED.tempo);
+            second = new Measure(SPEED, 1, TimeSignature.COMMON_TIME);
             second.getBeatAt(0).subdivideBy(2);
             second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
             second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
@@ -108,17 +108,17 @@ public abstract class AppDatabase extends RoomDatabase {
             SPEED.addMeasure(first);
             SPEED.addMeasure(second);
 
-            rhythmEntity = new RhythmEntity(0, SPEED.getName(), SPEED);
+            rhythmEntity = new RhythmEntity(0, "Speed Up", SPEED);
 
             mDao.insert(rhythmEntity);
 
-            Rhythm SPORT = new Rhythm("Sports Clap", 120);
+            Rhythm SPORT = new Rhythm( 120);
 
-            first = new Measure(SPORT, 0, TimeSignature.COMMON_TIME, SPORT.tempo);
+            first = new Measure(SPORT, 0, TimeSignature.COMMON_TIME);
             first.getBeatAt(1).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
             first.getBeatAt(3).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
 
-            second = new Measure(SPORT, 1, TimeSignature.COMMON_TIME, SPORT.tempo);
+            second = new Measure(SPORT, 1, TimeSignature.COMMON_TIME);
             second.getBeatAt(0).subdivideBy(3);
             second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
             second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
@@ -136,7 +136,7 @@ public abstract class AppDatabase extends RoomDatabase {
             SPORT.addMeasure(first);
             SPORT.addMeasure(second);
 
-            rhythmEntity = new RhythmEntity(0, SPORT.getName(), SPORT);
+            rhythmEntity = new RhythmEntity(0, "Sports Clap", SPORT);
             mDao.insert(rhythmEntity);
             return null;
         }

@@ -12,7 +12,6 @@ import java.util.List;
 // in the cloud at any point
 
 public class RhythmRepository {
-
     private RhythmDao mRhythmDao;
     private RhythmEntity mRhythmEntity;
     private LiveData<List<RhythmEntity>> mAllRhythms;
@@ -43,20 +42,38 @@ public class RhythmRepository {
 
 
     public void insert (RhythmEntity rhythmEntity) {
-        new insertAsyncTask(mRhythmDao).execute(rhythmEntity);
+        new InsertAsyncTask(mRhythmDao).execute(rhythmEntity);
     }
 
-    private static class insertAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
+    public void update(RhythmEntity rhythmEntity) {
+        new UpdateAsyncTask(mRhythmDao).execute(rhythmEntity);
+    }
+
+    private static class InsertAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
 
         private RhythmDao mAsyncTaskDao;
 
-        insertAsyncTask(RhythmDao dao) {
+        InsertAsyncTask(RhythmDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(final RhythmEntity... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
+        private RhythmDao mAsyncTaskDao;
+
+        UpdateAsyncTask(RhythmDao rhythmDao) {
+            mAsyncTaskDao = rhythmDao;
+        }
+
+        @Override
+        protected Void doInBackground(final RhythmEntity... params) {
+            mAsyncTaskDao.update(params);
             return null;
         }
     }

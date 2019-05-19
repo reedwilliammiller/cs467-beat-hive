@@ -48,5 +48,8 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(startSelectionActivity);
     }
 
-
+    public void startEditor(View view) {
+        Intent startEditorActivity = new Intent(this, EditorActivity.class);
+        startActivity(startEditorActivity);
+    }
 }

@@ -1,12 +1,15 @@
 package com.example.metrognome;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -14,11 +17,16 @@ import android.widget.ToggleButton;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.editor.MeasureAdapter;
+import com.example.metrognome.intent.IntentBuilder;
+import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
+
+import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
+import static com.example.metrognome.intent.IntentBuilder.KEY_WITH_PLAYBACK;
 
 /**
  * An activity for handling playback of a metronome.
@@ -29,10 +37,12 @@ public class PlaybackActivity extends AppCompatActivity {
     private ToggleButton playPauseButton;
     private SoundPoolWrapper soundPool;
     private Handler handler;
+    private RhythmEntity rhythmEntity;
     private Rhythm rhythm;
     private RhythmRunnable rhythmRunnable;
     private RecyclerView recyclerView;
     private RhythmObjectViewModel mRhythmObjectViewModel;
+    private Button editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +53,24 @@ public class PlaybackActivity extends AppCompatActivity {
 
     private void init() {
         Intent intent = getIntent();
-        int ID = intent.getIntExtra("ID", 0);
+        final int ID = intent.getIntExtra(KEY_ID, 0);
+        final boolean withPlayback = intent.getBooleanExtra(KEY_WITH_PLAYBACK, false);
         if(ID == 0){
             rhythm = Rhythm.BASIC;
         }
         else{
             RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
             mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-            Rhythm load = mRhythmObjectViewModel.getRhythm();
-            rhythm = load;
+            rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+            rhythm = rhythmEntity.getRhythm();
         }
 
-
         titleTextView = findViewById(R.id.text_view_title);
-        titleTextView.setText(rhythm.getName());
+        titleTextView.setText(rhythmEntity.getTitle());
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new MeasureAdapter(this, rhythm));
+        recyclerView.setAdapter(new MeasureAdapter(this, rhythm, false));
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Measure.MIN_BPM);
@@ -85,9 +95,26 @@ public class PlaybackActivity extends AppCompatActivity {
             }
         });
 
+        editButton = findViewById(R.id.button_edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = view.getContext();
+                Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
+                        .withId(ID)
+                        .toIntent();
+                context.startActivity(intent);
+                finish();
+            }
+        });
+
         soundPool = new SoundPoolWrapper(this);
         handler = new Handler();
         rhythmRunnable = new RhythmRunnable(rhythm, handler, soundPool);
+
+        if (withPlayback) {
+            playPauseButton.setChecked(true);
+        }
     }
 
     private void startPlayer() {
@@ -104,4 +131,9 @@ public class PlaybackActivity extends AppCompatActivity {
         stopPlayer();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopPlayer();
+    }
 }

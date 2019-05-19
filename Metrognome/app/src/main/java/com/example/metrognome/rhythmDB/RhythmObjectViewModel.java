@@ -11,17 +11,20 @@ import com.example.metrognome.time.Rhythm;
 
 public class RhythmObjectViewModel extends AndroidViewModel {
     private RhythmRepository mRepository;
-    private Rhythm mRhythm;
+    private RhythmEntity rhythmEntity;
 
     RhythmObjectViewModel(Application application, int ID) {
         super(application);
         mRepository = new RhythmRepository(application, ID);
-        RhythmEntity mRhythmEntityByID = mRepository.getmRhythmEntity();
-        System.out.println(mRhythmEntityByID.getTitle());
-        mRhythm = mRhythmEntityByID.getRhythm();
-
+        rhythmEntity = mRepository.getmRhythmEntity();
     }
 
-    public Rhythm getRhythm() { return mRhythm;}
+    public RhythmEntity getRhythmEntity() {
+        return rhythmEntity;
+    }
+
+    public RhythmRepository getRhythmRepository() {
+        return mRepository;
+    }
 
 }

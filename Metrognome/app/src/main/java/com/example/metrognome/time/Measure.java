@@ -16,19 +16,17 @@ public class Measure implements Iterable<Beat> {
     public static final int MIN_BPM = 1;
 
     private static final long MILLIS_PER_BPM = 60000;
-    private static final int DEFAULT_TEMPO = 60;
 
     private Rhythm rhythm;
     private int index;
     private TimeSignature timeSignature;
-    private int tempo;
     private List<Beat> beats = new ArrayList<>();
 
     /**
      * Creates a simple measure of 4/4 time at 60 bpm.
      */
     public Measure(Rhythm rhythm, int index) {
-        this(rhythm, index, TimeSignature.COMMON_TIME, DEFAULT_TEMPO);
+        this(rhythm, index, TimeSignature.COMMON_TIME);
     }
 
     /**
@@ -36,13 +34,11 @@ public class Measure implements Iterable<Beat> {
      * @param rhythm the rhythm that this measure belongs to
      * @param index the index of this measure
      * @param timeSignature the time signature (i.e. 4/4)
-     * @param tempo the tempo in BPM.
      */
-    public Measure(Rhythm rhythm, int index, TimeSignature timeSignature, int tempo) {
+    public Measure(Rhythm rhythm, int index, TimeSignature timeSignature) {
         this.rhythm = rhythm;
         this.index = index;
         setTimeSignature(timeSignature);
-        setTempo(tempo);
     }
 
     /**
@@ -51,20 +47,10 @@ public class Measure implements Iterable<Beat> {
      */
     public void setTimeSignature(TimeSignature timeSignature) {
         this.timeSignature = timeSignature;
-        for (int i = 0; i < timeSignature.getBeats(); i++) {
+        beats.clear();
+        for (int i = 0; i < timeSignature.getTopSignature(); i++) {
             beats.add(new Beat(this, i));
         }
-    }
-
-    /**
-     * Sets the tempo for this measure and updates the offsets for each beat.
-     * @param tempo the tempo in bpm.
-     */
-    public void setTempo(int tempo) {
-        if (tempo < MIN_BPM || tempo >= MAX_BPM) {
-            throw new IllegalArgumentException(String.format("Tempo must be between %d and %d: %d", MIN_BPM, MAX_BPM, tempo));
-        }
-        this.tempo = tempo;
     }
 
     public long getBeatOffsetMillisAt(int index) {
@@ -75,7 +61,6 @@ public class Measure implements Iterable<Beat> {
         return getBeatOffsetMillisAt(index) + (subdivision * getMillisPerBeat()) / getBeatAt(index).getSubdivisions();
     }
 
-
     public int getBeatCount() {
         return beats.size();
     }
@@ -85,11 +70,11 @@ public class Measure implements Iterable<Beat> {
     }
 
     private long getMillisPerBeat() {
-        return MILLIS_PER_BPM / tempo;
+        return MILLIS_PER_BPM / getTempo();
     }
 
     public int getTempo() {
-        return tempo;
+        return rhythm.getTempo();
     }
 
     public TimeSignature getTimeSignature() {
@@ -98,6 +83,10 @@ public class Measure implements Iterable<Beat> {
 
     public Beat getBeatAt(int index) {
         return beats.get(index);
+    }
+
+    public void setBeatAt(int index, Beat beat) {
+        beats.set(index, beat);
     }
 
     public void subdivideBeatAt(int index, int subdivisions) {
