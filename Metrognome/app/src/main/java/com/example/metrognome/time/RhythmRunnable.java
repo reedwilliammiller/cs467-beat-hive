@@ -36,8 +36,6 @@ public class RhythmRunnable implements Runnable {
                             measure.playBeatAtSubdivisionAt(beatIndex, subdivisionIndex, soundPool);
                         }
                     }, subdivisionOffset);
-                    recyclerView.smoothScrollToPosition(iterations);
-                    iterations++;
                 }
             }
         }

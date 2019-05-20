@@ -6,7 +6,12 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/measure_label"
-        android:id="@+id/measure_label"/>
+        android:id="@+id/measure_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"/>
 
     <include layout="@layout/note"
         android:id="@+id/note_1"

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/newEditor"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:background="@drawable/btn_rounded"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/record_icon"
+        android:text="@string/create_new_beat"
+        android:onClick="startEditor"
+        app:layout_constraintBottom_toTopOf="@+id/beatLibrary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/basicMetronome" />
+
+    <Button
+        android:id="@+id/beatLibrary"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:background="@drawable/btn_rounded"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/beat_library_icon"
+        android:text="@string/your_beats"
+        android:onClick="startSelection"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRecent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newEditor" />
+
+    <Button
+        android:id="@+id/basicMetronome"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:background="@drawable/btn_rounded"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/metronome_vector"
+        android:onClick="startPlayback"
+        android:text="@string/basic_metronome"
+        app:layout_constraintBottom_toTopOf="@+id/newEditor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <TextView
+        android:id="@+id/textViewRecent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/recent_beats"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerviewrecent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/beatLibrary" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerviewrecent"
+        android:layout_width="408dp"
+        android:layout_height="172dp"
+        android:layout_marginBottom="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRecent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/recyclerview_recent_rhythm_file" />
+</android.support.constraint.ConstraintLayout>

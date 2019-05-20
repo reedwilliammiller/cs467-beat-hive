@@ -3,10 +3,21 @@
     <string name="bpm">BPM</string>
     <string name="start">Start</string>
     <string name="stop">stop</string>
+    <string name="basic_metronome">Basic Metronome</string>
+    <string name="your_beats">Your Beats</string>
+    <string name="create_new_beat">Create Beat</string>
+    <string name="recent_beats">Recent Beats</string>
+    <string name="edit">Edit</string>
+    <string name="mambo_5">Mambo #5</string>
+    <string name="mambo_7">mambo #7</string>
+    <string name="mambo_6">Mambo #6</string>
     <string name="playback_edit_button_text">Edit</string>
-
     <string name="e_mnemonic">e</string>
     <string name="and_mnemonic">+</string>
     <string name="a_mnemonic">a</string>
     <string name="button_subdivide_text">subdivide</string>
+    <string name="time_signature_dialog_title">Time Signature</string>
+    <string name="time_signature_dialog_message">Choose a time signature.</string>
+    <string name="time_signature_dialog_ok">Ok</string>
+    <string name="time_signature_dialog_cancel">Cancel</string>
 </resources>
