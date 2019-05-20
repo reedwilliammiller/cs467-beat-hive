@@ -47,6 +47,11 @@ public class ScrollingLayoutManager extends LinearLayoutManager {
             }
 
             @Override
+            protected int getHorizontalSnapPreference() {
+                return SNAP_TO_END;
+            }
+
+            @Override
             protected int calculateTimeForScrolling(int dx) {
                 NumberPicker bpmPicker = ((Activity) context).findViewById(R.id.number_picker_tempo);
                 int bpm = bpmPicker.getValue();
