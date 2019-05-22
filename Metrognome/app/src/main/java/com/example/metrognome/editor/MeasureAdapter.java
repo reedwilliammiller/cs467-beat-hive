@@ -72,7 +72,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
             measure = beat.getMeasure();
             rhythm = measure.getRhythm();
             Log.d(TAG, beat.toString());
-            boolean isFirstBeat = measure.getBeatAt(0).equals(beat);
+            boolean isFirstBeat = rhythm.getBeatIndexInMeasure(beat) == 1;
 
             measureView = view.findViewById(R.id.measure_label);
             if (!isFirstBeat) {
@@ -107,7 +107,7 @@ public class MeasureAdapter extends RecyclerView.Adapter<MeasureAdapter.BeatView
                 String text;
                 Resources resources = view.getResources();
                 if (subdivisionIndex == 0) {
-                    text = Integer.toString(measure.indexOf(beat) + 1);
+                    text = Integer.toString(rhythm.getBeatIndexInMeasure(beat));
                 } else if (subdivisionIndex == 1) {
                     if (beat.getSubdivisions() == 4) {
                         text = resources.getString(R.string.e_mnemonic);

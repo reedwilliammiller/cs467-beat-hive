@@ -1,19 +1,16 @@
 package com.example.metrognome.time;
 
-import android.support.annotation.NonNull;
-
-import com.example.metrognome.audio.SoundPoolWrapper;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Represents a measure of time.
+ *
+ * This class is mostly a helper class for the Rhythm class to keep track of how many beats are
+ * in this measure.
+ *
+ * The {@link Rhythm} class keeps track of which beat is the first beat for this measure.
  */
-public class Measure implements Iterable<Beat> {
+public class Measure {
     private Rhythm rhythm;
-    private List<Beat> beats = new ArrayList<>();
+    private int numBeats;
 
     /**
      * Creates a measure with no beats.
@@ -30,88 +27,44 @@ public class Measure implements Iterable<Beat> {
      */
     public Measure(Rhythm rhythm, int numBeats) {
         this.rhythm = rhythm;
-        for (int i = 0; i < numBeats; i++) {
-            addBeat(new Beat(this));
-        }
+        this.numBeats = numBeats;
     }
 
-    public long getBeatOffsetMillisAt(int index) {
-        return index * getMillisPerBeat();
-    }
-
-    public long getSubdivisionOffsetMillisAt(int index, int subdivision) {
-        return getBeatOffsetMillisAt(index) + (subdivision * getMillisPerBeat()) / getBeatAt(index).getSubdivisions();
-    }
-
+    /**
+     * Returns the number of beats in this measure.
+     * @return the number of beats.
+     */
     public int getBeatCount() {
-        return beats.size();
+        return numBeats;
     }
 
-    public long getTotalMillis() {
-        return getBeatCount() * getMillisPerBeat();
+    public void addBeat() {
+        this.numBeats++;
     }
 
-    private long getMillisPerBeat() {
-        return rhythm.getMilliesPerBeat();
+    public void removeBeat() {
+        if (numBeats == 0) {
+            throw new IllegalStateException("Cannot have negative beats.");
+        }
+        this.numBeats--;
     }
 
-    public int getTempo() {
-        return rhythm.getTempo();
-    }
-
-    public Beat getBeatAt(int index) {
-        return beats.get(index);
-    }
-
-    public void setBeatAt(int index, Beat beat) {
-        beats.set(index, beat);
-    }
-
-    public void addBeat(Beat beat) {
-        beats.add(beat);
-    }
-
-    public void addBeat(int index, Beat beat) {
-        beats.add(index, beat);
-    }
-
-    public void removeBeat(int index) {
-        beats.remove(index);
-    }
-
-    public void subdivideBeatAt(int index, int subdivisions) {
-        getBeatAt(index).subdivideBy(subdivisions);
-    }
-
-    public void playBeatAtSubdivisionAt(int index, int subdivision, SoundPoolWrapper soundPool) {
-        getBeatAt(index).playSubdivisionAt(subdivision, soundPool);
-    }
-
+    /**
+     * Returns the rhythm this measure belongs to.
+     * @return the rhythm.
+     */
     public Rhythm getRhythm() {
         return rhythm;
     }
 
-    public int indexOf(Beat beat) {
-        return beats.indexOf(beat);
-    }
-
-    @NonNull
-    @Override
-    public Iterator<Beat> iterator() {
-        return beats.iterator();
-    }
-
+    /**
+     * Returns a string representation of this measure.
+     * @return this measure as a string.
+     */
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Measure: \n");
         stringBuilder.append("Beats: " + getBeatCount() + "\n");
-        for (int i = 0; i < beats.size(); i++) {
-            stringBuilder.append(beats.get(i));
-            if (i != beats.size() - 1) {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append("\n");
-        }
         return stringBuilder.toString();
     }
 }
