@@ -17,11 +17,13 @@ import org.json.JSONObject;
  * {
  *     "tempo": INTEGER,
  *     "measures": ARRAY of MEASURE
+ *     "beats": ARRAY of BEAT
  * }
  *
  * MEASURE:
  * {
- *     "beats": ARRAY of BEAT
+ *     "beat_index": INTEGER,
+ *     "beat_count": INTEGER
  * }
  *
  * BEAT:
