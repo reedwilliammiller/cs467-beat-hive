@@ -41,7 +41,6 @@ public class RhythmJSONConverter {
         }
         rhythm.addProperty("total_measures", rhythmInput.getMeasureCount());
         rhythm.add("measures", measures);
-        System.out.println(rhythm.toString());
         return rhythm.toString();
     }
 
@@ -49,7 +48,8 @@ public class RhythmJSONConverter {
         JsonParser jsonParser = new JsonParser();
         JsonObject rhythmJSON = jsonParser.parse(string).getAsJsonObject();
         int tempo = rhythmJSON.get("tempo").getAsInt();
-        Rhythm rhythm = new Rhythm(rhythmJSON.get("name").getAsString(), tempo);
+        String name = rhythmJSON.get("name").getAsString();
+        Rhythm rhythm = new Rhythm(name, tempo);
         for(int i = 0; i < rhythmJSON.get("total_measures").getAsInt(); i++){
             JsonObject measureJSON = rhythmJSON.getAsJsonArray("measures").get(i).getAsJsonObject();
             JsonObject timesigJSON = measureJSON.get("timesignature").getAsJsonObject();

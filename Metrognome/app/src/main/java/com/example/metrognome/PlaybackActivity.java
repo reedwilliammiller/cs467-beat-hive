@@ -50,8 +50,8 @@ public class PlaybackActivity extends AppCompatActivity {
         else{
             RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
             mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-            Rhythm load = mRhythmObjectViewModel.getRhythm();
-            rhythm = load;
+            Rhythm loadRhythm = mRhythmObjectViewModel.getRhythm();
+            rhythm = loadRhythm;
         }
 
 

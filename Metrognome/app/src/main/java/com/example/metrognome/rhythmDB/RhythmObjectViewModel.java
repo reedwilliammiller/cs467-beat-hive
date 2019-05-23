@@ -17,7 +17,6 @@ public class RhythmObjectViewModel extends AndroidViewModel {
         super(application);
         mRepository = new RhythmRepository(application, ID);
         RhythmEntity mRhythmEntityByID = mRepository.getmRhythmEntity();
-        System.out.println(mRhythmEntityByID.getTitle());
         mRhythm = mRhythmEntityByID.getRhythm();
 
     }
