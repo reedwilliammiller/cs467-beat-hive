@@ -8,34 +8,31 @@ import java.util.List;
  * Represents an entire rhythm which is a sequence of measures.
  */
 public class Rhythm implements Iterable<Measure> {
+    public static final int DEFAULT_TEMPO = 60;
+    public static final int MAX_BPM = 400;
+    public static final int MIN_BPM = 1;
+
+    private static final long MILLIS_PER_BPM = 60000;
     private List<Measure> measures = new ArrayList<>();
-    private String name;
-    public int tempo;
+    private int tempo;
 
     public static Rhythm BASIC;
     static {
-        BASIC = new Rhythm("Basic Metronome", 60);
-        Measure first = new Measure(BASIC, 0, TimeSignature.COMMON_TIME, BASIC.tempo);
+        BASIC = new Rhythm();
+        Measure first = new Measure(BASIC);
         BASIC.addMeasure(first);
     }
 
-    public Rhythm(String name, int tempo) {
-        this.name = name;
-        this.tempo = tempo;
+    public Rhythm() {
+        this(DEFAULT_TEMPO);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public Rhythm(int tempo) {
+        setTempo(tempo);
     }
 
     public void setTempo(int tempo) {
-        for (Measure measure : measures) {
-            measure.setTempo(tempo);
-        }
+        this.tempo = tempo;
     }
 
     public int getTempo() {
@@ -43,15 +40,15 @@ public class Rhythm implements Iterable<Measure> {
     }
 
     public long getTotalMillis() {
-        long total = 0;
-        for (Measure m : measures) {
-            total += m.getTotalMillis();
-        }
-        return total;
+        return getBeatCount() * getMilliesPerBeat();
     }
 
     public void addMeasure(Measure measure) {
         measures.add(measure);
+    }
+
+    public void addMeasureAt(int index, Measure measure) {
+        measures.add(index, measure);
     }
 
     public Measure getMeasureAt(int index) {
@@ -64,6 +61,22 @@ public class Rhythm implements Iterable<Measure> {
 
     public int getMeasureCount() {
         return measures.size();
+    }
+
+    public int indexOf(Measure measure) {
+        return measures.indexOf(measure);
+    }
+
+    public int indexOf(Beat beat) {
+        int count = 0;
+        for (Measure measure : this) {
+            int index = measure.indexOf(beat);
+            if (index != -1) {
+                return index + count;
+            }
+            count += measure.getBeatCount();
+        }
+        return -1;
     }
 
     public int getBeatCount() {
@@ -90,28 +103,6 @@ public class Rhythm implements Iterable<Measure> {
         return measures.get(measureIndex).getBeatAt(currentBeatIndex);
     }
 
-    public boolean isFirstBeatOfMeasureAt(final int beatIndex) {
-        int currentBeatIndex = 0;
-        for (Measure measure : measures) {
-            if (currentBeatIndex == beatIndex) {
-                return true;
-            }
-            currentBeatIndex += measure.getBeatCount();
-        }
-        return false;
-    }
-
-    public int getMeasureIndexOfBeatAt(final int beatIndex) {
-        int currentBeatIndex = 0;
-        for (int i = 0; i < measures.size(); i++) {
-            if (currentBeatIndex >= beatIndex) {
-                return i;
-            }
-            currentBeatIndex += measures.get(i).getBeatCount();
-        }
-        return measures.size() - 1;
-    }
-
     public Iterator<Measure> iterator() {
         return measures.iterator();
     }
@@ -127,5 +118,9 @@ public class Rhythm implements Iterable<Measure> {
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public long getMilliesPerBeat() {
+        return MILLIS_PER_BPM / getTempo();
     }
 }

@@ -17,7 +17,6 @@ import java.util.List;
 public class SelectionActivity extends AppCompatActivity {
     private RhythmViewModel mRhythmViewModel;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +37,5 @@ public class SelectionActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
 
