@@ -16,13 +16,6 @@ public class Rhythm implements Iterable<Measure> {
     private List<Measure> measures = new ArrayList<>();
     private int tempo;
 
-    public static Rhythm BASIC;
-    static {
-        BASIC = new Rhythm();
-        Measure first = new Measure(BASIC);
-        BASIC.addMeasure(first);
-    }
-
     public Rhythm() {
         this(DEFAULT_TEMPO);
     }

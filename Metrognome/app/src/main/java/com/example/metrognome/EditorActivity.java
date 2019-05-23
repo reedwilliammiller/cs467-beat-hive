@@ -40,15 +40,10 @@ public class EditorActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
-        if(ID == 0){
-            rhythm = Rhythm.BASIC;
-        }
-        else{
-            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-            rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-            rhythm = rhythmEntity.getRhythm();
-        }
+        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+        rhythm = rhythmEntity.getRhythm();
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

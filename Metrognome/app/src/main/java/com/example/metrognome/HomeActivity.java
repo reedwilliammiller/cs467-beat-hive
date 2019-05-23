@@ -32,15 +32,10 @@ public class HomeActivity extends AppCompatActivity {
         mRecentRhythmViewModel.getRecentRhythms().observe(this, new Observer<List<RhythmEntity>>() {
             @Override
             public void onChanged(@Nullable final List<RhythmEntity> rhythmEntities) {
-                // Update the cached copy of the words in the adapter.
+                // Update the cached copy of the rhythms in the adapter.
                 adapter.setRhythms(rhythmEntities);
             }
         });
-    }
-
-    public void startPlayback(View view) {
-        Intent startPlaybackActivity = new Intent(this, PlaybackActivity.class);
-        startActivity(startPlaybackActivity);
     }
 
     public void startSelection(View view) {

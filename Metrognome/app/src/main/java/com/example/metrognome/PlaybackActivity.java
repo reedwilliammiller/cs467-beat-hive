@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -57,15 +55,11 @@ public class PlaybackActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
         final boolean withPlayback = intent.getBooleanExtra(KEY_WITH_PLAYBACK, false);
-        if(ID == 0){
-            rhythm = Rhythm.BASIC;
-        }
-        else{
-            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-            rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-            rhythm = rhythmEntity.getRhythm();
-        }
+
+        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+        rhythm = rhythmEntity.getRhythm();
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(rhythmEntity.getTitle());
