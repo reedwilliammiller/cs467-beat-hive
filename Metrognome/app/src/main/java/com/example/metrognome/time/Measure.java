@@ -5,28 +5,22 @@ package com.example.metrognome.time;
  *
  * This class is mostly a helper class for the Rhythm class to keep track of how many beats are
  * in this measure.
- *
- * The {@link Rhythm} class keeps track of which beat is the first beat for this measure.
  */
 public class Measure {
-    private Rhythm rhythm;
     private int numBeats;
 
     /**
      * Creates a measure with no beats.
-     * @param rhythm the rhythm this measure belongs to
      */
-    public Measure(Rhythm rhythm) {
-        this(rhythm, 0);
+    public Measure() {
+        this(0);
     }
 
     /**
      * Create a measure for the given rhythm with the specified number of beats.
-     * @param rhythm the rhythm that this measure belongs to
      * @param numBeats the number of beats to add to this measure.
      */
-    public Measure(Rhythm rhythm, int numBeats) {
-        this.rhythm = rhythm;
+    public Measure(int numBeats) {
         this.numBeats = numBeats;
     }
 
@@ -47,14 +41,6 @@ public class Measure {
             throw new IllegalStateException("Cannot have negative beats.");
         }
         this.numBeats--;
-    }
-
-    /**
-     * Returns the rhythm this measure belongs to.
-     * @return the rhythm.
-     */
-    public Rhythm getRhythm() {
-        return rhythm;
     }
 
     /**

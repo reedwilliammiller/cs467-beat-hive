@@ -8,25 +8,21 @@ import com.example.metrognome.audio.SoundPoolWrapper;
 public class Beat {
     private static final int MIN_SUBDIVISIONS = 1;
     private static final int MAX_SUBDIVISIONS = 4;
-    private Measure measure;
     private int[] soundIds = new int[MAX_SUBDIVISIONS];
     private int numSubdivisions;
 
     /**
      * Constructs a beat with 1 subdivision.
-     * @param measure the measure this beat belongs to.
      */
-    public Beat(Measure measure) {
-        this(measure, MIN_SUBDIVISIONS);
+    public Beat() {
+        this(MIN_SUBDIVISIONS);
     }
 
     /**
      * Constructs a beat that has up to 4 subdivisions.
-     * @param measure the measure this beat belongs to.
      * @param numSubdivisions the number of subdivision, must be between 1 and 4.
      */
-    public Beat(Measure measure, int numSubdivisions) {
-        this.measure = measure;
+    public Beat(int numSubdivisions) {
         subdivideBy(numSubdivisions);
     }
 
@@ -99,23 +95,6 @@ public class Beat {
      */
     public void playSubdivisionAt(int subdivision, SoundPoolWrapper soundPool) {
         soundPool.play(getSoundAt(subdivision));
-    }
-
-    /**
-     * Gets the measure that this beat belongs to.
-     * @return the measure for this beat.
-     */
-    public Measure getMeasure() {
-        return measure;
-    }
-
-    /**
-     * Gets the offset in ms for the specified subdivision.
-     * @param subdivision the subdivision to get.
-     * @return the offset in ms for this subdivision.
-     */
-    public long getSubdivisionOffset(int subdivision) {
-        return measure.getRhythm().getMilliesPerBeat() / getSubdivisions() * subdivision;
     }
 
     /**

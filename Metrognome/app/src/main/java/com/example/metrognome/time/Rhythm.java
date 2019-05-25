@@ -1,5 +1,7 @@
 package com.example.metrognome.time;
 
+import android.util.Log;
+
 import com.example.metrognome.audio.SoundPoolWrapper;
 
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents an entire rhythm which is a sequence of measures.
@@ -18,16 +21,9 @@ public class Rhythm implements Iterable<Beat> {
     public static final int MIN_BPM = 1;
 
     private static final long MILLIS_PER_BPM = 60000;
-    private Map<Measure, Integer> measures = new HashMap<>();
+    private List<Measure> measures = new LinkedList<>();
     private List<Beat> beats = new LinkedList<>();
     private int tempo;
-
-    public static Rhythm BASIC;
-    static {
-        BASIC = new Rhythm();
-        Measure first = new Measure(BASIC, 4);
-        BASIC.addMeasure(first);
-    }
 
     public Rhythm() {
         this(DEFAULT_TEMPO);
@@ -53,35 +49,66 @@ public class Rhythm implements Iterable<Beat> {
      * Puts a measure at the end of the list.
      */
     public void addMeasure(final Measure measure) {
-        addMeasureAt(getBeatCount(), measure);
+        addMeasureAt(measures.size(), measure);
     }
 
-    private void addMeasureAt(final int index, final Measure measure) {
-        if (index > getBeatCount() || index < 0) {
-            throw new IllegalArgumentException(String.format("Invalid index: %d", index));
+    public List<Measure> getMeasures() {
+        return measures;
+    }
+
+    public void addMeasureAt(final int measureIndex, final Measure measure) {
+        if (measureIndex > measures.size() || measureIndex < 0) {
+            throw new IllegalArgumentException(String.format("Invalid index: %d", measureIndex));
         }
-        measures.put(measure, index);
+        measures.add(measureIndex, measure);
         for (int i = 0; i < measure.getBeatCount(); i++) {
-            beats.add(index + i, new Beat(measure));
+            beats.add(getBeatsBeforeMeasure(measure), new Beat());
         }
+    }
+
+    public void removeMeasureAt(final int measureIndex) {
+        if (measureIndex >= measures.size() || measureIndex < 0) {
+            throw new IllegalArgumentException(String.format("Invalid index: %d", measureIndex));
+        }
+        Measure toRemove = measures.get(measureIndex);
+        int firstBeatIndex = getBeatsBeforeMeasure(toRemove);
+        int lastBeatIndex = firstBeatIndex + toRemove.getBeatCount() - 1;
+        for (int i = lastBeatIndex; i >= firstBeatIndex; i--) {
+            beats.remove(i);
+        }
+        measures.remove(toRemove);
+    }
+
+    public Measure getMeasureAt(final int index) {
+        return measures.get(index);
     }
 
     /**
-     * Returns the measure that for the specified beat index.
-     * @param index
+     * Returns the measure for the specified beat index.
+     * @param beatIndex the beat index
      * @return
      */
-    public Measure getMeasureAt(final int index) {
-        return getBeatAt(index).getMeasure();
+    public Measure getMeasureForBeatAt(final int beatIndex) {
+        if (measures.size() == 0) {
+            return null;
+        }
+        int currentBeatIndex = 0;
+        final Iterator<Measure> itr = measures.iterator();
+        Measure currentMeasure = itr.next();
+        while (currentBeatIndex + currentMeasure.getBeatCount() <= beatIndex && itr.hasNext()) {
+            currentBeatIndex += currentMeasure.getBeatCount();
+            currentMeasure = itr.next();
+        }
+        return currentMeasure;
     }
 
     /**
      * Removes the measure at the specified beat index and all the beats associated with it.
-     * @param index index of the measure.
+     * @param beatIndex index of the measure.
      */
-    public void removeMeasureAt(final int index) {
-        Measure toRemove = getMeasureAt(index);
-        int startIndex = measures.get(toRemove);
+    public void removeMeasureForBeatAt(final int beatIndex) {
+        Measure toRemove = getMeasureForBeatAt(beatIndex);
+        int startIndex = getBeatsBeforeMeasure(toRemove);
         int beatCount = toRemove.getBeatCount();
         for (int i = startIndex + beatCount - 1; i >= startIndex; i--) {
             beats.remove(i);
@@ -89,32 +116,61 @@ public class Rhythm implements Iterable<Beat> {
         measures.remove(toRemove);
     }
 
+    private int getBeatsBeforeMeasure(final Measure measure) {
+        int beatCount = 0;
+        for (Measure thisMeasure : measures) {
+            if (thisMeasure.equals(measure)) {
+                break;
+            }
+            beatCount += thisMeasure.getBeatCount();
+        }
+        return beatCount;
+    }
+
+    /**
+     * Returns the index of the measure.
+     * @param measure
+     * @return
+     */
     public int indexOf(final Measure measure) {
-        return measures.get(measure);
+        return measures.indexOf(measure);
+    }
+
+    /**
+     * Returns the index of the beat.
+     * @param beat
+     * @return
+     */
+    public int indexOf(final Beat beat) {
+        return beats.indexOf(beat);
+    }
+
+    public int getMeasureNumberInRhythm(final Measure measure) {
+        return indexOf(measure) + 1;
     }
 
     /**
      * Returns the number for this beat in the measure.
-     *
      * @param beat the beat.
      * @return
      */
-    public int getBeatIndexInMeasure(final Beat beat) {
-        int measureIndex = measures.get(beat.getMeasure());
-        int beatIndex = indexOf(beat);
-        return beatIndex - measureIndex + 1;
+    public int getBeatNumberInMeasure(final Beat beat) {
+        final int beatIndex = indexOf(beat);
+        final int beatsBeforeMeasure = getBeatsBeforeMeasure(getMeasureForBeatAt(beatIndex));
+        Log.d(TAG, "Measures before beat: " +  beatsBeforeMeasure);
+        return beatIndex - beatsBeforeMeasure + 1;
     }
 
     public int getMeasureCount() {
         return measures.size();
     }
 
-    public int indexOf(final Beat beat) {
-        return beats.indexOf(beat);
-    }
-
     public int getBeatCount() {
         return beats.size();
+    }
+
+    public void setBeatAt(final int beatIndex, final Beat beat) {
+        beats.set(beatIndex, beat);
     }
 
     public Beat getBeatAt(final int beatIndex) {
@@ -125,11 +181,21 @@ public class Rhythm implements Iterable<Beat> {
         return MILLIS_PER_BPM / getTempo();
     }
 
-    public long getBeatOffsetMillies(int index) {
+    public long getBeatOffsetMillies(final int index) {
         return index * getMilliesPerBeat();
     }
 
-    public void playBeatSubdivisionAt(int index, int subdivision, SoundPoolWrapper soundPool) {
+    /**
+     * Gets the offset in ms for the specified subdivision.
+     * @param beat the beat to get.
+     * @param subdivision the subdivision to get.
+     * @return the offset in ms for this subdivision.
+     */
+    public long getSubdivisionOffsetForBeat(final Beat beat, final int subdivision) {
+        return getMilliesPerBeat() / beat.getSubdivisions() * subdivision;
+    }
+
+    public void playBeatSubdivisionAt(final int index, final int subdivision, final SoundPoolWrapper soundPool) {
         getBeatAt(index).playSubdivisionAt(subdivision, soundPool);
     }
 

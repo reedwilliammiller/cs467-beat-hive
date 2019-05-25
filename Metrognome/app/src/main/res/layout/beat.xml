@@ -70,4 +70,13 @@
         android:layout_marginTop="48dp"
         android:background="@color/colorBeatDivider"/>
 
+    <View
+        android:id="@+id/measure_divider"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp"
+        android:background="@color/colorMeasureDivider"
+        android:visibility="gone"/>
+
 </android.support.constraint.ConstraintLayout>

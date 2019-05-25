@@ -23,7 +23,7 @@ public class RhythmRunnable implements Runnable {
             for (int j = 0; j < beat.getSubdivisions(); j++) {
                 final int beatIndex = i;
                 final int subdivisionIndex = j;
-                long subdivisionOffset = beat.getSubdivisionOffset(j);
+                long subdivisionOffset = rhythm.getSubdivisionOffsetForBeat(beat, j);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

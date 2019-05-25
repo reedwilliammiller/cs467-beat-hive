@@ -20,4 +20,14 @@
     <string name="time_signature_dialog_message">Choose a time signature.</string>
     <string name="time_signature_dialog_ok">Ok</string>
     <string name="time_signature_dialog_cancel">Cancel</string>
+    <string name="text_measure_add">Where would you like to add the measure?</string>
+    <string name="text_measure_remove">Which measure would you like to delete?</string>
+    <string name="text_delete_measure">Delete Measure</string>
+    <string name="text_add_measure">Add Measure</string>
+    <string name="text_rhythm_title_hint">Name your beat</string>
+    <string name="text_button_add">Add</string>
+    <string name="text_button_delete">Delete</string>
+    <string name="text_button_cancel">Cancel</string>
+    <string name="text_button_save">Save</string>
+    <string name="text_button_play">Play</string>
 </resources>

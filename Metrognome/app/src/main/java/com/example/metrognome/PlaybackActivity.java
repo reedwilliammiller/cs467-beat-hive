@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
-import com.example.metrognome.editor.MeasureAdapter;
+import com.example.metrognome.editor.BeatAdapter;
 import com.example.metrognome.intent.IntentBuilder;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
@@ -54,22 +54,17 @@ public class PlaybackActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
         final boolean withPlayback = intent.getBooleanExtra(KEY_WITH_PLAYBACK, false);
-        if(ID == 0){
-            rhythm = Rhythm.BASIC;
-        }
-        else{
-            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-            rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-            rhythm = rhythmEntity.getRhythm();
-        }
+        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+        rhythm = rhythmEntity.getRhythm();
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(rhythmEntity.getTitle());
 
-        recyclerView = findViewById(R.id.recycler_view_measure);
+        recyclerView = findViewById(R.id.recycler_view_rhythm);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, false));
+        recyclerView.setAdapter(new BeatAdapter(this, rhythm, false));
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Rhythm.MIN_BPM);
