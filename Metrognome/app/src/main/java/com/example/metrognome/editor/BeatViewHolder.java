@@ -69,6 +69,28 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
     private void setupNote(final int noteId, final int subdivisionIndex) {
         View noteView = view.findViewById(noteId);
         ToggleButton noteButton = noteView.findViewById(R.id.button_note);
+        updateNoteText(noteId, subdivisionIndex);
+        if (subdivisionIndex < beat.getSubdivisions() && beat.getSoundAt(subdivisionIndex) != SoundPoolWrapper.INAUDIBLE) {
+            noteButton.setChecked(true);
+        }
+        if (isEditable) {
+            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
+                    } else {
+                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
+                    }
+                }
+            });
+        } else {
+            noteButton.setEnabled(false);
+        }
+    }
+
+    private void updateNoteText(final int noteId, final int subdivisionIndex) {
+        View noteView = view.findViewById(noteId);
         TextView noteText = noteView.findViewById(R.id.text_view_note);
         if (noteText != null) {
             String text;
@@ -92,24 +114,6 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
             }
             noteText.setText(text);
         }
-
-        if (subdivisionIndex < beat.getSubdivisions() && beat.getSoundAt(subdivisionIndex) != SoundPoolWrapper.INAUDIBLE) {
-            noteButton.setChecked(true);
-        }
-        if (isEditable) {
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
-                    } else {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
-                    }
-                }
-            });
-        } else {
-            noteButton.setEnabled(false);
-        }
     }
 
     private void updateVisibility() {
@@ -120,11 +124,13 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
         } else {
             view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
             view.findViewById(R.id.note_2).setVisibility(View.VISIBLE);
+            updateNoteText(R.id.note_2, 1);
         }
         if (subdivisionCount < 3) {
             view.findViewById(R.id.note_3).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
+            updateNoteText(R.id.note_3, 2);
         }
         if (subdivisionCount < 4) {
             view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
@@ -132,6 +138,7 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
         } else {
             view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
             view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
+            updateNoteText(R.id.note_4, 3);
         }
     }
 
@@ -171,5 +178,27 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
                 updateVisibility();
             }
         });
+    }
+
+    private static String getStringForNote(Resources resources, int beatNumber, int noteIndex, int numSubdivisions) {
+        String text;
+        if (noteIndex == 0) {
+            text = Integer.toString(beatNumber);
+        } else if (noteIndex == 1) {
+            if (numSubdivisions == 4) {
+                text = resources.getString(R.string.e_mnemonic);
+            } else {
+                text = resources.getString(R.string.and_mnemonic);
+            }
+        } else if (noteIndex == 2) {
+            if (numSubdivisions == 4) {
+                text = resources.getString(R.string.and_mnemonic);
+            } else {
+                text = resources.getString(R.string.a_mnemonic);
+            }
+        } else {
+            text = resources.getString(R.string.a_mnemonic);
+        }
+        return text;
     }
 }
