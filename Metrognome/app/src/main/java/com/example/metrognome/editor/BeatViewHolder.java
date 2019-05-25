@@ -1,13 +1,10 @@
 package com.example.metrognome.editor;
 
 import android.content.res.Resources;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -40,6 +37,7 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
         if (!isFirstBeat) {
             measureView.setVisibility(View.GONE);
         } else {
+            measureView.setVisibility(View.VISIBLE);
             measureTextView = view.findViewById(R.id.text_view_measure);
             beatCountTextView = view.findViewById(R.id.text_view_measure_beat_count);
             measureTextView.setText(String.format("%d/%d", rhythm.indexOf(measure) + 1, rhythm.getMeasureCount()));
@@ -63,6 +61,9 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
         if (measure.getBeatCount() == rhythm.getBeatNumberInMeasure(beat)) {
             view.findViewById(R.id.beat_divider).setVisibility(View.GONE);
             view.findViewById(R.id.measure_divider).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.beat_divider).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.measure_divider).setVisibility(View.GONE);
         }
     }
 
@@ -180,25 +181,5 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private static String getStringForNote(Resources resources, int beatNumber, int noteIndex, int numSubdivisions) {
-        String text;
-        if (noteIndex == 0) {
-            text = Integer.toString(beatNumber);
-        } else if (noteIndex == 1) {
-            if (numSubdivisions == 4) {
-                text = resources.getString(R.string.e_mnemonic);
-            } else {
-                text = resources.getString(R.string.and_mnemonic);
-            }
-        } else if (noteIndex == 2) {
-            if (numSubdivisions == 4) {
-                text = resources.getString(R.string.and_mnemonic);
-            } else {
-                text = resources.getString(R.string.a_mnemonic);
-            }
-        } else {
-            text = resources.getString(R.string.a_mnemonic);
-        }
-        return text;
-    }
+
 }

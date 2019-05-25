@@ -1,6 +1,10 @@
 package com.example.metrognome.editor;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +16,16 @@ import com.example.metrognome.time.Rhythm;
 
 public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = BeatAdapter.class.getSimpleName();
+    private final FragmentManager fragmentManager;
     private final Rhythm rhythm;
     private final LayoutInflater inflater;
     private final boolean isEditable;
 
-    public BeatAdapter(Context context, Rhythm rhythm, boolean isEditable) {
+    public BeatAdapter(Context context, FragmentManager fragmentManager, Rhythm rhythm, boolean isEditable) {
         this.inflater = LayoutInflater.from(context);
         this.rhythm = rhythm;
         this.isEditable = isEditable;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BeatViewHolder) {
             BeatViewHolder viewHolder = (BeatViewHolder) holder;
             final Beat beat = rhythm.getBeatAt(position);
@@ -38,6 +44,21 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewHolder.measure = rhythm.getMeasureForBeatAt(position);
             viewHolder.rhythm = rhythm;
             viewHolder.isEditable = this.isEditable;
+            if (isEditable) {
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        v.setSelected(true);
+                        DialogFragment beatEditorAlertDialog = new BeatEditorAlertDialog();
+                        Bundle args = new Bundle();
+                        args.putInt(BeatEditorAlertDialog.KEY_BEAT_INDEX, position);
+                        beatEditorAlertDialog.setArguments(args);
+                        beatEditorAlertDialog.show(fragmentManager, "beat_editor");
+                        return true;
+                    }
+                });
+            }
+
             viewHolder.init();
         }
     }

@@ -79,6 +79,21 @@ public class Rhythm implements Iterable<Beat> {
         measures.remove(toRemove);
     }
 
+    public void removeBeatAt(final int beatIndex) {
+        final Measure measureForBeat = getMeasureForBeatAt(beatIndex);
+        if (measureForBeat.getBeatCount() == 1) {
+            measures.remove(measureForBeat);
+        }
+        measureForBeat.removeBeat();
+        beats.remove(beatIndex);
+    }
+
+    public void addBeatAt(final int beatIndex) {
+        final Measure measureForBeat = getMeasureForBeatAt(beatIndex);
+        measureForBeat.addBeat();
+        beats.add(beatIndex, new Beat());
+    }
+
     public Measure getMeasureAt(final int index) {
         return measures.get(index);
     }
@@ -100,20 +115,6 @@ public class Rhythm implements Iterable<Beat> {
             currentMeasure = itr.next();
         }
         return currentMeasure;
-    }
-
-    /**
-     * Removes the measure at the specified beat index and all the beats associated with it.
-     * @param beatIndex index of the measure.
-     */
-    public void removeMeasureForBeatAt(final int beatIndex) {
-        Measure toRemove = getMeasureForBeatAt(beatIndex);
-        int startIndex = getBeatsBeforeMeasure(toRemove);
-        int beatCount = toRemove.getBeatCount();
-        for (int i = startIndex + beatCount - 1; i >= startIndex; i--) {
-            beats.remove(i);
-        }
-        measures.remove(toRemove);
     }
 
     private int getBeatsBeforeMeasure(final Measure measure) {

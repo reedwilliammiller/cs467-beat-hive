@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import com.example.metrognome.R;
 
@@ -20,7 +19,6 @@ public class MeasureEditorAlertDialog extends DialogFragment {
 
     private AlertDialog.Builder builder;
     private NumberPicker numberPicker;
-    private TextView textView;
     private DialogListener dialogListener;
 
     @Override
@@ -34,11 +32,11 @@ public class MeasureEditorAlertDialog extends DialogFragment {
         View dialogView = inflater.inflate(R.layout.alert_dialog_measure, null);
         numberPicker = dialogView.findViewById(R.id.number_picker_dialog_measure);
         numberPicker.setMinValue(0);
-        textView = dialogView.findViewById(R.id.text_view_dialog_measure);
+        numberPicker.setWrapSelectorWheel(false);
 
         if (isAddMeasure) {
-            textView.setText(R.string.text_add_measure);
             numberPicker.setMaxValue(measureCount);
+            builder.setTitle(R.string.text_add_measure);
             builder.setPositiveButton(R.string.text_button_add, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -46,7 +44,7 @@ public class MeasureEditorAlertDialog extends DialogFragment {
                 }
             });
         } else {
-            textView.setText(R.string.text_delete_measure);
+            builder.setTitle(R.string.text_delete_measure);
             numberPicker.setMaxValue(measureCount - 1);
             builder.setPositiveButton(R.string.text_button_delete, new DialogInterface.OnClickListener() {
                 @Override
