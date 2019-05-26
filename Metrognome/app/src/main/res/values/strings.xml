@@ -20,4 +20,5 @@
     <string name="time_signature_dialog_message">Choose a time signature.</string>
     <string name="time_signature_dialog_ok">Ok</string>
     <string name="time_signature_dialog_cancel">Cancel</string>
+    <string name="new_beat">New Beat</string>
 </resources>

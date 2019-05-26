@@ -21,10 +21,13 @@ import com.example.metrognome.intent.IntentBuilder;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
 
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
+import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHMSTRING;
+import static com.example.metrognome.intent.IntentBuilder.KEY_TITLE;
 import static com.example.metrognome.intent.IntentBuilder.KEY_WITH_PLAYBACK;
 
 /**
@@ -54,15 +57,23 @@ public class PlaybackActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
+        final String title = intent.getStringExtra(KEY_TITLE);
+        final String rhythmString = intent.getStringExtra(KEY_RHYTHMSTRING);
         final boolean withPlayback = intent.getBooleanExtra(KEY_WITH_PLAYBACK, false);
 
-        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-        rhythm = rhythmEntity.getRhythm();
+        // If Rhythm exists in database, update last opened time
+        if(ID != 0){
+            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+            mRhythmObjectViewModel.setLastOpened();
+        }
+
+        //Convert Rhythm from json string passed through intent
+        rhythm = RhythmJSONConverter.fromJSON(rhythmString);
+
 
         titleTextView = findViewById(R.id.text_view_title);
-        titleTextView.setText(rhythmEntity.getTitle());
+        titleTextView.setText(title);
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, false));
@@ -99,6 +110,8 @@ public class PlaybackActivity extends AppCompatActivity {
                 final Context context = view.getContext();
                 Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
                         .withId(ID)
+                        .withTitle(title)
+                        .withRhythm(rhythmString)
                         .toIntent();
                 context.startActivity(intent);
                 finish();

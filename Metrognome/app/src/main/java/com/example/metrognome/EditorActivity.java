@@ -16,9 +16,14 @@ import com.example.metrognome.intent.IntentBuilder;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
+import com.example.metrognome.rhythmDB.RhythmViewModel;
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
+import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
+import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHMSTRING;
+import static com.example.metrognome.intent.IntentBuilder.KEY_TITLE;
 
 public class EditorActivity extends AppCompatActivity {
     private RhythmObjectViewModel mRhythmObjectViewModel;
@@ -26,9 +31,11 @@ public class EditorActivity extends AppCompatActivity {
     private Rhythm rhythm;
     private RecyclerView recyclerView;;
     private Button playButton;
+    private Button saveButton;
     private Button resetButton;
     private Button addMeasureButton;
     private EditText titleEditText;
+    private RhythmViewModel mRhythmViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +47,20 @@ public class EditorActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
-        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-        rhythm = rhythmEntity.getRhythm();
+        String title = intent.getStringExtra(KEY_TITLE);
+
+        if (ID == 0) {
+            Rhythm NEW = new Rhythm( 120);
+            Measure first = new Measure(NEW, 4);
+            NEW.addMeasure(first);
+            rhythm = NEW;
+        }
+        else{
+            final String rhythmString = intent.getStringExtra(KEY_RHYTHMSTRING);
+            rhythm = RhythmJSONConverter.fromJSON(rhythmString);
+        }
+
+
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -51,23 +68,44 @@ public class EditorActivity extends AppCompatActivity {
 
         titleEditText = findViewById(R.id.edit_text_title);
 
-        if (ID != 0) {
-            titleEditText.setText(rhythmEntity.getTitle());
-        }
 
+        titleEditText.setText(title);
         playButton = findViewById(R.id.button_play);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rhythmEntity.setTitle(titleEditText.getText().toString());
-                mRhythmObjectViewModel.getRhythmRepository().update(rhythmEntity);
                 final Context context = view.getContext();
                 Intent startEditorIntent = IntentBuilder.getBuilder(context, PlaybackActivity.class)
                         .withId(ID)
+                        .withTitle(titleEditText.getText().toString())
+                        .withRhythm(RhythmJSONConverter.toJSON(rhythm))
                         .withPlayback(true)
                         .toIntent();
                 context.startActivity(startEditorIntent);
                 finish();
+            }
+        });
+
+        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+
+
+        saveButton = findViewById(R.id.button_save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RhythmEntity mRhythmEntity;
+                if(ID==0){
+                    mRhythmEntity = new RhythmEntity(0, titleEditText.getText().toString(), rhythm);
+                    mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
+                }
+                else{
+                    mRhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+                    mRhythmEntity.setRhythm(rhythm);
+                    mRhythmEntity.setTitle(titleEditText.getText().toString());
+                    mRhythmObjectViewModel.getRhythmRepository().update(mRhythmEntity);
+                }
+
             }
         });
     }

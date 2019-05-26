@@ -26,4 +26,6 @@ public class RhythmViewModel extends AndroidViewModel {
 
     public void insert(RhythmEntity rhythmEntity) { mRepository.insert(rhythmEntity); }
 
+    public int getID(RhythmEntity rhythmEntity) { return rhythmEntity.getId(); }
+
 }

@@ -2,6 +2,7 @@ package com.example.metrognome.rhythmDB;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import com.example.metrognome.PlaybackActivity;
 import com.example.metrognome.R;
 import com.example.metrognome.intent.IntentBuilder;
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 
 import java.util.List;
 
@@ -18,10 +20,12 @@ import java.util.List;
 public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.RhythmViewHolder> {
     class RhythmViewHolder extends RecyclerView.ViewHolder {
         private final Button rhythmItemView;
+        private final AppCompatImageButton rhythmTrash;
 
         private RhythmViewHolder(View itemView) {
             super(itemView);
             rhythmItemView = itemView.findViewById(R.id.rhythmOpenButton);
+            rhythmTrash = itemView.findViewById(R.id.rhythmTrashButton);
         }
     }
 
@@ -48,10 +52,20 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
                     final Context context = v.getContext();
                     Intent intent = IntentBuilder.getBuilder(context, PlaybackActivity.class)
                             .withId(current.getId())
+                            .withTitle(current.getTitle())
+                            .withRhythm(RhythmJSONConverter.toJSON(current.getRhythm()))
                             .toIntent();
                     context.startActivity(intent);
                 }
             });
+            holder.rhythmTrash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mRhythmEntities.remove(current);
+                    notifyDataSetChanged();
+                }
+            });
+
         } else {
             holder.rhythmItemView.setText("No RhythmEntity");
         }
