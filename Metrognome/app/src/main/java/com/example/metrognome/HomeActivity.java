@@ -3,6 +3,7 @@ package com.example.metrognome;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.metrognome.intent.IntentBuilder;
 import com.example.metrognome.rhythmDB.RecentRhythmListAdapter;
 import com.example.metrognome.rhythmDB.RecentRhythmViewModel;
 import com.example.metrognome.rhythmDB.RhythmEntity;
@@ -32,16 +34,12 @@ public class HomeActivity extends AppCompatActivity {
         mRecentRhythmViewModel.getRecentRhythms().observe(this, new Observer<List<RhythmEntity>>() {
             @Override
             public void onChanged(@Nullable final List<RhythmEntity> rhythmEntities) {
-                // Update the cached copy of the words in the adapter.
+                // Update the cached copy of the rhythms in the adapter.
                 adapter.setRhythms(rhythmEntities);
             }
         });
     }
 
-    public void startPlayback(View view) {
-        Intent startPlaybackActivity = new Intent(this, PlaybackActivity.class);
-        startActivity(startPlaybackActivity);
-    }
 
     public void startSelection(View view) {
         Intent startSelectionActivity = new Intent(this, SelectionActivity.class);
@@ -49,7 +47,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void startEditor(View view) {
-        Intent startEditorActivity = new Intent(this, EditorActivity.class);
-        startActivity(startEditorActivity);
+        final Context context = view.getContext();
+        Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
+                .withId(0)
+                .withTitle("New Beat")
+                .toIntent();
+        context.startActivity(intent);
     }
 }

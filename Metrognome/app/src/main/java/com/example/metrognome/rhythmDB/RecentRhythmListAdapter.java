@@ -11,6 +11,8 @@ import android.widget.Button;
 
 import com.example.metrognome.PlaybackActivity;
 import com.example.metrognome.R;
+import com.example.metrognome.intent.IntentBuilder;
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 
 import java.util.List;
 
@@ -52,8 +54,11 @@ public class RecentRhythmListAdapter extends RecyclerView.Adapter<RecentRhythmLi
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PlaybackActivity.class);
-                    intent.putExtra("ID", current.getId());
+                    Intent intent = IntentBuilder.getBuilder(context, PlaybackActivity.class)
+                            .withId(current.getId())
+                            .withTitle(current.getTitle())
+                            .withRhythm(RhythmJSONConverter.toJSON(current.getRhythm()))
+                            .toIntent();
                     context.startActivity(intent);
                 }
             });

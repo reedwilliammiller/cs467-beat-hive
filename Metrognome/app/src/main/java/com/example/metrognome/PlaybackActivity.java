@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -15,16 +14,19 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.metrognome.animation.ScrollingLayoutManager;
 import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.editor.BeatAdapter;
 import com.example.metrognome.intent.IntentBuilder;
-import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModel;
 import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
 
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
+import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHM_STRING;
+import static com.example.metrognome.intent.IntentBuilder.KEY_TITLE;
 import static com.example.metrognome.intent.IntentBuilder.KEY_WITH_PLAYBACK;
 
 /**
@@ -36,10 +38,10 @@ public class PlaybackActivity extends AppCompatActivity {
     private ToggleButton playPauseButton;
     private SoundPoolWrapper soundPool;
     private Handler handler;
-    private RhythmEntity rhythmEntity;
     private Rhythm rhythm;
     private RhythmRunnable rhythmRunnable;
     private RecyclerView recyclerView;
+    private ScrollingLayoutManager scroller;
     private RhythmObjectViewModel mRhythmObjectViewModel;
     private Button editButton;
 
@@ -53,18 +55,28 @@ public class PlaybackActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
+        final String title = intent.getStringExtra(KEY_TITLE);
+        final String rhythmString = intent.getStringExtra(KEY_RHYTHM_STRING);
         final boolean withPlayback = intent.getBooleanExtra(KEY_WITH_PLAYBACK, false);
-        RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
-        mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
-        rhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-        rhythm = rhythmEntity.getRhythm();
+
+        // If Rhythm exists in database, update last opened time
+        if(ID != 0){
+            RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
+            mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
+            mRhythmObjectViewModel.setLastOpened();
+        }
+
+        //Convert Rhythm from json string passed through intent
+        rhythm = RhythmJSONConverter.fromJSON(rhythmString);
+
 
         titleTextView = findViewById(R.id.text_view_title);
-        titleTextView.setText(rhythmEntity.getTitle());
+        titleTextView.setText(title);
 
         recyclerView = findViewById(R.id.recycler_view_rhythm);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(new BeatAdapter(this, getFragmentManager(), rhythm, false));
+        scroller = new ScrollingLayoutManager(this);
+        recyclerView.setLayoutManager(scroller);
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Rhythm.MIN_BPM);
@@ -96,6 +108,8 @@ public class PlaybackActivity extends AppCompatActivity {
                 final Context context = view.getContext();
                 Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
                         .withId(ID)
+                        .withTitle(title)
+                        .withRhythm(rhythmString)
                         .toIntent();
                 context.startActivity(intent);
                 finish();
@@ -104,7 +118,7 @@ public class PlaybackActivity extends AppCompatActivity {
 
         soundPool = new SoundPoolWrapper(this);
         handler = new Handler();
-        rhythmRunnable = new RhythmRunnable(rhythm, handler, soundPool);
+        rhythmRunnable = new RhythmRunnable(rhythm, recyclerView, handler, soundPool);
 
         if (withPlayback) {
             playPauseButton.setChecked(true);
@@ -112,16 +126,20 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void startPlayer() {
+        recyclerView.scrollToPosition(0);
         handler.post(rhythmRunnable);
+        recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
     }
 
     private void stopPlayer() {
         handler.removeCallbacksAndMessages(null);
+        recyclerView.scrollToPosition(0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        overridePendingTransition(0, 0);
         stopPlayer();
     }
 

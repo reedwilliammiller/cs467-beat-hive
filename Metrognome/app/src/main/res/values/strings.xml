@@ -28,4 +28,5 @@
     <string name="text_dialog_beat_add">Add</string>
     <string name="text_dialog_beat_remove">Delete</string>
     <string name="text_toast_save_format">Beat: %s saved.</string>
+    <string name="new_beat">New Beat</string>
 </resources>

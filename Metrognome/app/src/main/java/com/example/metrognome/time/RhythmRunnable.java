@@ -1,18 +1,23 @@
 package com.example.metrognome.time;
 
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
 public class RhythmRunnable implements Runnable {
     private Rhythm rhythm;
     private Handler handler;
+    private RecyclerView recyclerView;
     private SoundPoolWrapper soundPool;
+    private int iterations;
 
-    public RhythmRunnable(Rhythm rhythm, Handler handler, SoundPoolWrapper soundPool) {
+    public RhythmRunnable(Rhythm rhythm, RecyclerView recyclerView, Handler handler, SoundPoolWrapper soundPool) {
         this.rhythm = rhythm;
+        this.recyclerView = recyclerView;
         this.handler = handler;
         this.soundPool = soundPool;
+        this.iterations = 1;
     }
 
     @Override

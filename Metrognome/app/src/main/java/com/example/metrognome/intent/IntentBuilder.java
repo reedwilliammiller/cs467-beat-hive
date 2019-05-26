@@ -10,6 +10,8 @@ import java.util.TreeMap;
 
 public class IntentBuilder {
     public static final String KEY_ID = "ID";
+    public static final String KEY_TITLE = "TITLE";
+    public static final String KEY_RHYTHM_STRING = "RHYTHM_STRING";
     public static final String KEY_WITH_PLAYBACK = "WITH_PLAYBACK";
     private WeakReference<Context> context;
     private Class<? extends Activity> targetActivity;
@@ -26,6 +28,16 @@ public class IntentBuilder {
 
     public IntentBuilder withId(int id) {
         valueMap.put(KEY_ID, id);
+        return this;
+    }
+
+    public IntentBuilder withTitle(String title) {
+        valueMap.put(KEY_TITLE, title);
+        return this;
+    }
+
+    public IntentBuilder withRhythm(String rhythmString) {
+        valueMap.put(KEY_RHYTHM_STRING, rhythmString);
         return this;
     }
 
