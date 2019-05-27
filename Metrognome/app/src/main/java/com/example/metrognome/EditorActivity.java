@@ -181,6 +181,7 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                removeView.setBackground(removeView.getResources().getDrawable(R.drawable.background_beat));
                 rhythm.removeBeatAt(beatIndex);
                 recyclerView.getAdapter().notifyDataSetChanged();
             }

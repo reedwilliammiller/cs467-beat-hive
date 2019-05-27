@@ -38,9 +38,9 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BeatViewHolder) {
             BeatViewHolder viewHolder = (BeatViewHolder) holder;
-            final Beat beat = rhythm.getBeatAt(position);
+            final Beat beat = rhythm.getBeatAt(position % rhythm.getBeatCount());
             viewHolder.beat = beat;
-            viewHolder.measure = rhythm.getMeasureForBeatAt(position);
+            viewHolder.measure = rhythm.getMeasureForBeatAt(position % rhythm.getBeatCount());
             viewHolder.rhythm = rhythm;
             viewHolder.isEditable = this.isEditable;
             if (isEditable) {
@@ -64,6 +64,9 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return rhythm.getBeatCount();
+        if (isEditable) {
+            return rhythm.getBeatCount();
+        }
+        return Integer.MAX_VALUE;
     }
 }

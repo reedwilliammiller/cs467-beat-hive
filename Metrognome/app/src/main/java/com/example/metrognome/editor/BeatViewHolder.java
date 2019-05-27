@@ -120,7 +120,7 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
     private void updateVisibility() {
         int subdivisionCount = beat.getSubdivisions();
         if (subdivisionCount < 2) {
-            view.findViewById(R.id.button_remove_subdivision).setVisibility(View.GONE);
+            view.findViewById(R.id.button_remove_subdivision).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.note_2).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
@@ -137,7 +137,7 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
             view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
             view.findViewById(R.id.note_4).setVisibility(View.GONE);
         } else {
-            view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
+            view.findViewById(R.id.button_add_subdivision).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
             updateNoteText(R.id.note_4, 3);
         }
