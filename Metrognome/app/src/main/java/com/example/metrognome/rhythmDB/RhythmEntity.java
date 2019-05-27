@@ -5,9 +5,11 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
+import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 import com.example.metrognome.time.Rhythm;
 
 import java.util.Date;
+
 
 
 @Entity(tableName = "rhythm_table")
@@ -47,9 +49,19 @@ public class RhythmEntity {
     public Rhythm getRhythm() {
         return rhythm;
     }
+
     public void setRhythm(Rhythm rhythm) {
         this.rhythm = rhythm;
     }
+
+    public String getRhythmString() {
+        return RhythmJSONConverter.toJSON(rhythm);
+    }
+
+    public void setRhythmString(String rhythmString){
+        this.setRhythm(RhythmJSONConverter.fromJSON(rhythmString));
+    }
+
 }
 
 

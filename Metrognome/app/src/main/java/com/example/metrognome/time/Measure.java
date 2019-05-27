@@ -1,138 +1,56 @@
 package com.example.metrognome.time;
 
-import android.support.annotation.NonNull;
-
-import com.example.metrognome.audio.SoundPoolWrapper;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Represents a measure of time.
+ *
+ * This class is mostly a helper class for the Rhythm class to keep track of how many beats are
+ * in this measure.
  */
-public class Measure implements Iterable<Beat> {
-    public static final int MAX_BPM = 400;
-    public static final int MIN_BPM = 1;
-
-    private static final long MILLIS_PER_BPM = 60000;
-    private static final int DEFAULT_TEMPO = 60;
-
-    private Rhythm rhythm;
-    private int index;
-    private TimeSignature timeSignature;
-    private int tempo;
-    private List<Beat> beats = new ArrayList<>();
+public class Measure {
+    private int numBeats;
 
     /**
-     * Creates a simple measure of 4/4 time at 60 bpm.
+     * Creates a measure with no beats.
      */
-    public Measure(Rhythm rhythm, int index) {
-        this(rhythm, index, TimeSignature.COMMON_TIME, DEFAULT_TEMPO);
+    public Measure() {
+        this(0);
     }
 
     /**
-     * Create a measure with the given {@link TimeSignature} and tempo in BPM.
-     * @param rhythm the rhythm that this measure belongs to
-     * @param index the index of this measure
-     * @param timeSignature the time signature (i.e. 4/4)
-     * @param tempo the tempo in BPM.
+     * Create a measure for the given rhythm with the specified number of beats.
+     * @param numBeats the number of beats to add to this measure.
      */
-    public Measure(Rhythm rhythm, int index, TimeSignature timeSignature, int tempo) {
-        this.rhythm = rhythm;
-        this.index = index;
-        setTimeSignature(timeSignature);
-        setTempo(tempo);
+    public Measure(int numBeats) {
+        this.numBeats = numBeats;
     }
 
     /**
-     * Sets the time signature for the measure and gives default beats.
-     * @param timeSignature the time signature.
+     * Returns the number of beats in this measure.
+     * @return the number of beats.
      */
-    public void setTimeSignature(TimeSignature timeSignature) {
-        this.timeSignature = timeSignature;
-        for (int i = 0; i < timeSignature.getBeats(); i++) {
-            beats.add(new Beat(this, i));
-        }
-    }
-
-    /**
-     * Sets the tempo for this measure and updates the offsets for each beat.
-     * @param tempo the tempo in bpm.
-     */
-    public void setTempo(int tempo) {
-        if (tempo < MIN_BPM || tempo >= MAX_BPM) {
-            throw new IllegalArgumentException(String.format("Tempo must be between %d and %d: %d", MIN_BPM, MAX_BPM, tempo));
-        }
-        this.tempo = tempo;
-    }
-
-    public long getBeatOffsetMillisAt(int index) {
-        return index * getMillisPerBeat();
-    }
-
-    public long getSubdivisionOffsetMillisAt(int index, int subdivision) {
-        return getBeatOffsetMillisAt(index) + (subdivision * getMillisPerBeat()) / getBeatAt(index).getSubdivisions();
-    }
-
-
     public int getBeatCount() {
-        return beats.size();
+        return numBeats;
     }
 
-    public long getTotalMillis() {
-        return getBeatCount() * getMillisPerBeat();
+    public void addBeat() {
+        this.numBeats++;
     }
 
-    private long getMillisPerBeat() {
-        return MILLIS_PER_BPM / tempo;
+    public void removeBeat() {
+        if (numBeats == 0) {
+            throw new IllegalStateException("Cannot have negative beats.");
+        }
+        this.numBeats--;
     }
 
-    public int getTempo() {
-        return tempo;
-    }
-
-    public TimeSignature getTimeSignature() {
-        return timeSignature;
-    }
-
-    public Beat getBeatAt(int index) {
-        return beats.get(index);
-    }
-
-    public void subdivideBeatAt(int index, int subdivisions) {
-        getBeatAt(index).subdivideBy(subdivisions);
-    }
-
-    public void playBeatAtSubdivisionAt(int index, int subdivision, SoundPoolWrapper soundPool) {
-        getBeatAt(index).playSubdivisionAt(subdivision, soundPool);
-    }
-
-    public Rhythm getRhythm() {
-        return rhythm;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    @NonNull
-    @Override
-    public Iterator<Beat> iterator() {
-        return beats.iterator();
-    }
-
+    /**
+     * Returns a string representation of this measure.
+     * @return this measure as a string.
+     */
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Measure: \n");
-        stringBuilder.append("TimeSignature: " + timeSignature + "\n");
-        for (int i = 0; i < beats.size(); i++) {
-            stringBuilder.append(beats.get(i));
-            if (i != beats.size() - 1) {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append("\n");
-        }
+        stringBuilder.append("Beats: " + getBeatCount() + "\n");
         return stringBuilder.toString();
     }
 }

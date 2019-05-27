@@ -16,7 +16,13 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_marginTop="@dimen/playback_control_title_margin_top"/>
 
-    <include layout="@layout/recycler_view_measure" />
+    <include layout="@layout/recyclerview_rhythm"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/playback_controls_container"/>
 
     <include layout="@layout/playback_controls_container" />
 </android.support.constraint.ConstraintLayout>
