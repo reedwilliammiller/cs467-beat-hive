@@ -10,6 +10,7 @@ import android.arch.lifecycle.AndroidViewModel;
 public class RhythmObjectViewModel extends AndroidViewModel {
     private RhythmRepository mRepository;
     private RhythmEntity rhythmEntity;
+    private int ID;
 
     RhythmObjectViewModel(Application application, int ID) {
         super(application);

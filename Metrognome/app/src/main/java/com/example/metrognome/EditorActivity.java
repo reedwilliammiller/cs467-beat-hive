@@ -60,7 +60,7 @@ public class EditorActivity extends AppCompatActivity {
             rhythm = RhythmJSONConverter.fromJSON(rhythmString);
         }
 
-
+        System.out.println(ID);
 
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -95,9 +95,17 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RhythmEntity mRhythmEntity;
-                if(ID==0){
+                if(ID == 0){
                     mRhythmEntity = new RhythmEntity(0, titleEditText.getText().toString(), rhythm);
-                    mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
+                    int new_id = (int) mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
+                    final Context context = view.getContext();
+                    Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
+                            .withId(new_id)
+                            .withTitle(titleEditText.getText().toString())
+                            .withRhythm(RhythmJSONConverter.toJSON(rhythm))
+                            .toIntent();
+                    context.startActivity(intent);
+                    finish();
                 }
                 else{
                     mRhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
@@ -105,8 +113,13 @@ public class EditorActivity extends AppCompatActivity {
                     mRhythmEntity.setTitle(titleEditText.getText().toString());
                     mRhythmObjectViewModel.getRhythmRepository().update(mRhythmEntity);
                 }
-
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.metrognome.rhythmDB.AppDatabase;
 import com.example.metrognome.rhythmDB.RhythmEntity;
 import com.example.metrognome.rhythmDB.RhythmListAdapter;
 import com.example.metrognome.rhythmDB.RhythmViewModel;
@@ -21,7 +22,6 @@ public class SelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection);
-
         RecyclerView recyclerView = findViewById(R.id.recyclerviewrhythms);
         final RhythmListAdapter adapter = new RhythmListAdapter(this);
         recyclerView.setAdapter(adapter);

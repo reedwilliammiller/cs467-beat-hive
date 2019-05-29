@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface RhythmDao {
     @Insert
-    void insert(RhythmEntity rhythmEntity);
+    long insert(RhythmEntity rhythmEntity);
 
     @Update
     void update(RhythmEntity... rhythmEntities);

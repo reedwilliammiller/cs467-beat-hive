@@ -29,12 +29,7 @@ public class RhythmRepository {
     RhythmRepository(Application application, int ID) {
         AppDatabase db = AppDatabase.getDatabase(application);
         mRhythmDao = db.rhythmDao();
-        if(ID == 0){
-            mRhythmEntity = mRhythmDao.getRecentRhythm();
-        }
-        else{
-            mRhythmEntity = mRhythmDao.getRhythmById(ID);
-        }
+        mRhythmEntity = mRhythmDao.getRhythmById(ID);
         this.ID = ID;
     }
 
@@ -52,8 +47,8 @@ public class RhythmRepository {
         mRhythmDao.setLastOpened(ID, new Date());
     }
 
-    public void insert (RhythmEntity rhythmEntity) {
-       new InsertAsyncTask(mRhythmDao).execute(rhythmEntity);
+    public long insert (RhythmEntity rhythmEntity) {
+        return mRhythmDao.insert(rhythmEntity);
     }
 
     public void update(RhythmEntity rhythmEntity) {
@@ -64,20 +59,6 @@ public class RhythmRepository {
         new DeleteAsyncTask(mRhythmDao).execute(rhythmEntity);
     }
 
-    private static class InsertAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
-
-        private RhythmDao mAsyncTaskDao;
-
-        InsertAsyncTask(RhythmDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final RhythmEntity... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
 
     private static class UpdateAsyncTask extends AsyncTask<RhythmEntity, Void, Void> {
         private RhythmDao mAsyncTaskDao;
