@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         final Context context = view.getContext();
         Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
                 .withId(0)
-                .withTitle("New Beat")
+                .withTitle("Untitled")
                 .toIntent();
         context.startActivity(intent);
     }

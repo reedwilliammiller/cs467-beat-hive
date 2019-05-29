@@ -1,15 +1,19 @@
 package com.example.metrognome;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.metrognome.editor.MeasureAdapter;
 import com.example.metrognome.intent.IntentBuilder;
@@ -32,9 +36,10 @@ public class EditorActivity extends AppCompatActivity {
     private RecyclerView recyclerView;;
     private Button playButton;
     private Button saveButton;
+    private Button saveAsButton;
     private Button resetButton;
     private Button addMeasureButton;
-    private EditText titleEditText;
+    private TextView titleTextView;
     private RhythmViewModel mRhythmViewModel;
 
     @Override
@@ -60,16 +65,14 @@ public class EditorActivity extends AppCompatActivity {
             rhythm = RhythmJSONConverter.fromJSON(rhythmString);
         }
 
-        System.out.println(ID);
-
         recyclerView = findViewById(R.id.recycler_view_measure);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(new MeasureAdapter(this, getFragmentManager(), rhythm, true));
 
-        titleEditText = findViewById(R.id.edit_text_title);
+        titleTextView = findViewById(R.id.text_view_title);
 
 
-        titleEditText.setText(title);
+        titleTextView.setText(title);
         playButton = findViewById(R.id.button_play);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +80,7 @@ public class EditorActivity extends AppCompatActivity {
                 final Context context = view.getContext();
                 Intent startEditorIntent = IntentBuilder.getBuilder(context, PlaybackActivity.class)
                         .withId(ID)
-                        .withTitle(titleEditText.getText().toString())
+                        .withTitle(titleTextView.getText().toString())
                         .withRhythm(RhythmJSONConverter.toJSON(rhythm))
                         .withPlayback(true)
                         .toIntent();
@@ -86,33 +89,72 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
+
         RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
         mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);
 
 
         saveButton = findViewById(R.id.button_save);
+        if(ID == 0){
+            saveButton.setEnabled(false);
+        }
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RhythmEntity mRhythmEntity;
-                if(ID == 0){
-                    mRhythmEntity = new RhythmEntity(0, titleEditText.getText().toString(), rhythm);
-                    int new_id = (int) mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
-                    final Context context = view.getContext();
-                    Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
-                            .withId(new_id)
-                            .withTitle(titleEditText.getText().toString())
-                            .withRhythm(RhythmJSONConverter.toJSON(rhythm))
-                            .toIntent();
-                    context.startActivity(intent);
-                    finish();
-                }
-                else{
-                    mRhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
-                    mRhythmEntity.setRhythm(rhythm);
-                    mRhythmEntity.setTitle(titleEditText.getText().toString());
-                    mRhythmObjectViewModel.getRhythmRepository().update(mRhythmEntity);
-                }
+                mRhythmEntity = mRhythmObjectViewModel.getRhythmEntity();
+                mRhythmEntity.setRhythm(rhythm);
+                mRhythmEntity.setTitle(titleTextView.getText().toString());
+                mRhythmObjectViewModel.getRhythmRepository().update(mRhythmEntity);
+            }
+        });
+
+        saveAsButton = findViewById(R.id.button_save_as);
+        saveAsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                // get prompts.xml view
+                LayoutInflater li = LayoutInflater.from(view.getContext());
+                View promptsView = li.inflate(R.layout.save_as_dialog, null);
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        view.getContext());
+
+                alertDialogBuilder.setView(promptsView);
+
+                final EditText userInput = (EditText) promptsView
+                        .findViewById(R.id.edit_title_save_as);
+
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        RhythmEntity mRhythmEntity;
+                                        mRhythmEntity = new RhythmEntity(0, userInput.getText().toString(), rhythm);
+                                        int new_id = (int) mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
+                                        final Context context = view.getContext();
+                                        Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
+                                                .withId(new_id)
+                                                .withTitle(userInput.getText().toString())
+                                                .withRhythm(RhythmJSONConverter.toJSON(rhythm))
+                                                .toIntent();
+                                        context.startActivity(intent);
+                                        finish();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
             }
         });
     }
