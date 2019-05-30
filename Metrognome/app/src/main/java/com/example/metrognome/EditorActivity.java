@@ -131,7 +131,7 @@ public class EditorActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         RhythmEntity mRhythmEntity;
-                                        mRhythmEntity = new RhythmEntity(0, userInput.getText().toString(), rhythm);
+                                        mRhythmEntity = new RhythmEntity(0, titleTextView.getText().toString(), rhythm);
                                         int new_id = (int) mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
                                         final Context context = view.getContext();
                                         Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
