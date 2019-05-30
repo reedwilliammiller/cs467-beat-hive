@@ -39,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
             new RoomDatabase.Callback(){
 
                 @Override
-                public void onCreate (@NonNull SupportSQLiteDatabase db){
+                public void onOpen (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
                     new PopulateDbAsync(INSTANCE).execute();
                 }
@@ -58,85 +58,59 @@ public abstract class AppDatabase extends RoomDatabase {
             mDao.deleteAll();
 
             Rhythm RUMBA_CLAVE = new Rhythm( 120);
-
-            Measure first = new Measure(RUMBA_CLAVE, 4);
-            first.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            first.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-
-            Measure second = new Measure(RUMBA_CLAVE, 4);
-            second.getBeatAt(1).subdivideBy(2);
-            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(3).subdivideBy(2);
-            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-
-            RUMBA_CLAVE.addMeasure(first);
-            RUMBA_CLAVE.addMeasure(second);
-
-            RhythmEntity rhythmEntity = new RhythmEntity(0, "Rumba Clave", RUMBA_CLAVE);
-
-            mDao.insert(rhythmEntity);
+            RUMBA_CLAVE.addMeasure(new Measure(4));
+            RUMBA_CLAVE.addMeasure(new Measure(4));
+            RUMBA_CLAVE.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            RUMBA_CLAVE.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            RUMBA_CLAVE.getBeatAt(5).subdivideBy(2);
+            RUMBA_CLAVE.getBeatAt(5).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            RUMBA_CLAVE.getBeatAt(5).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            RUMBA_CLAVE.getBeatAt(6).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            RUMBA_CLAVE.getBeatAt(7).subdivideBy(2);
+            RUMBA_CLAVE.getBeatAt(7).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            RUMBA_CLAVE.getBeatAt(7).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            mDao.insert(new RhythmEntity(0, "Rumba Clave", RUMBA_CLAVE));
 
             Rhythm FOUR = new Rhythm( 120);
-            first = new Measure(FOUR, 4);
-            FOUR.addMeasure(first);
-            rhythmEntity = new RhythmEntity(0, "Four on the Floor", FOUR);
-
-            mDao.insert(rhythmEntity);
+            FOUR.addMeasure(new Measure( 4));
+            mDao.insert(new RhythmEntity(1, "Four on the Floor", FOUR));
 
             Rhythm SPEED = new Rhythm( 220);
-
-            first = new Measure(SPEED, 4);
-
-            second = new Measure(SPEED, 4);
-            second.getBeatAt(0).subdivideBy(2);
-            second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(1).subdivideBy(2);
-            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(2).subdivideBy(2);
-            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(2).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(3).subdivideBy(2);
-            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(3).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-
-            SPEED.addMeasure(first);
-            SPEED.addMeasure(second);
-
-            rhythmEntity = new RhythmEntity(0, "Speed Up", SPEED);
-
-            mDao.insert(rhythmEntity);
+            SPEED.addMeasure(new Measure( 4));
+            SPEED.addMeasure(new Measure( 4));
+            SPEED.getBeatAt(4).subdivideBy(2);
+            SPEED.getBeatAt(4).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(4).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(5).subdivideBy(2);
+            SPEED.getBeatAt(5).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(5).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(6).subdivideBy(2);
+            SPEED.getBeatAt(6).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(6).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(7).subdivideBy(2);
+            SPEED.getBeatAt(7).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPEED.getBeatAt(7).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            mDao.insert(new RhythmEntity(2, "Speed Up", SPEED));
 
             Rhythm SPORT = new Rhythm( 120);
-
-            first = new Measure(SPORT, 4);
-            first.getBeatAt(1).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
-            first.getBeatAt(3).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
-
-            second = new Measure(SPORT, 4);
-            second.getBeatAt(0).subdivideBy(3);
-            second.getBeatAt(0).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(0).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(0).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(1).subdivideBy(3);
-            second.getBeatAt(1).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(1).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(1).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(2).subdivideBy(3);
-            second.getBeatAt(2).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(2).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            second.getBeatAt(2).setSoundAt(2, SoundPoolWrapper.INAUDIBLE);
-            second.getBeatAt(3).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-
-            SPORT.addMeasure(first);
-            SPORT.addMeasure(second);
-
-            rhythmEntity = new RhythmEntity(0, "Sports Clap", SPORT);
-            mDao.insert(rhythmEntity);
+            SPORT.addMeasure(new Measure( 4));
+            SPORT.addMeasure(new Measure( 4));
+            SPORT.getBeatAt(1).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(3).setSoundAt(0,SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(4).subdivideBy(3);
+            SPORT.getBeatAt(4).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPORT.getBeatAt(4).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(4).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+            SPORT.getBeatAt(5).subdivideBy(3);
+            SPORT.getBeatAt(5).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
+            SPORT.getBeatAt(5).setSoundAt(1, SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(5).setSoundAt(2, SoundPoolWrapper.DEFAULT_SOUND);
+            SPORT.getBeatAt(6).subdivideBy(3);
+            SPORT.getBeatAt(6).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(6).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
+            SPORT.getBeatAt(6).setSoundAt(2, SoundPoolWrapper.INAUDIBLE);
+            SPORT.getBeatAt(7).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
+            mDao.insert(new RhythmEntity(3, "Sports Clap", SPORT));
             return null;
         }
     }

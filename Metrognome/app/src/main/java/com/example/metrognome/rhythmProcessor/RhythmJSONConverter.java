@@ -10,6 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Format of JSON:
  *
@@ -17,11 +20,12 @@ import org.json.JSONObject;
  * {
  *     "tempo": INTEGER,
  *     "measures": ARRAY of MEASURE
+ *     "beats": ARRAY of BEAT
  * }
  *
  * MEASURE:
  * {
- *     "beats": ARRAY of BEAT
+ *     "beat_count": INTEGER
  * }
  *
  * BEAT:
@@ -32,10 +36,11 @@ import org.json.JSONObject;
 public class RhythmJSONConverter {
     private static final String TAG = RhythmJSONConverter.class.getSimpleName();
 
-    private static final String KEY_SOUND_IDS = "sound_ids";
-    private static final String KEY_BEATS = "beats";
     private static final String KEY_TEMPO = "tempo";
     private static final String KEY_MEASURES = "measures";
+    private static final String KEY_BEATS = "beats";
+    private static final String KEY_BEAT_COUNT = "beat_count";
+    private static final String KEY_SOUND_IDS = "sound_ids";
 
     public static String toJSON(Rhythm rhythm){
         try {
@@ -65,11 +70,17 @@ public class RhythmJSONConverter {
         Log.d(TAG, rhythm.toString());
         JSONObject object = new JSONObject();
         object.put(KEY_TEMPO, rhythm.getTempo());
-        JSONArray measuresArray = new JSONArray();
-        for (Measure measure : rhythm) {
-            measuresArray.put(measureToJSON(measure));
+        JSONArray beatArray = new JSONArray();
+        for (int i = 0; i < rhythm.getBeatCount(); i++) {
+            Beat beat = rhythm.getBeatAt(i);
+            beatArray.put(beatToJSON(beat));
         }
-        object.put(KEY_MEASURES, measuresArray);
+        object.put(KEY_BEATS, beatArray);
+        JSONArray measureArray = new JSONArray();
+        for (Measure measure : rhythm.getMeasures()) {
+            measureArray.put(measureToJSON(measure));
+        }
+        object.put(KEY_MEASURES, measureArray);
         return object;
     }
 
@@ -80,7 +91,12 @@ public class RhythmJSONConverter {
         JSONArray measuresArray = object.getJSONArray(KEY_MEASURES);
         for (int i = 0; i < measuresArray.length(); i++) {
             JSONObject measureObject = measuresArray.getJSONObject(i);
-            rhythm.addMeasure(jsonToMeasure(measureObject, rhythm));
+            rhythm.addMeasure(jsonToMeasure(measureObject));
+        }
+        JSONArray beatArray = object.getJSONArray(KEY_BEATS);
+        for (int i = 0; i < beatArray.length(); i++) {
+            JSONObject beatObject = beatArray.getJSONObject(i);
+            rhythm.setBeatAt(i, jsonToBeat(beatObject));
         }
         return rhythm;
     }
@@ -88,23 +104,13 @@ public class RhythmJSONConverter {
     private static JSONObject measureToJSON(Measure measure) throws JSONException {
         Log.d(TAG, measure.toString());
         JSONObject object = new JSONObject();
-        JSONArray beatsArray = new JSONArray();
-        for (Beat beat : measure) {
-            beatsArray.put(beatToJSON(beat));
-        }
-        object.put(KEY_BEATS, beatsArray);
+        object.put(KEY_BEAT_COUNT,measure.getBeatCount());
         return object;
     }
 
-    private static Measure jsonToMeasure(JSONObject object, Rhythm rhythm) throws JSONException {
+    private static Measure jsonToMeasure(JSONObject object) throws JSONException {
         Log.d(TAG, object.toString());
-        Measure measure = new Measure(rhythm);
-        JSONArray beatsArray = object.getJSONArray(KEY_BEATS);
-        for (int i = 0; i < beatsArray.length(); i++) {
-            JSONObject beatObject = beatsArray.getJSONObject(i);
-            measure.addBeat(jsonToBeat(beatObject, measure));
-        }
-        return measure;
+        return new Measure(object.getInt(KEY_BEAT_COUNT));
     }
 
     private static JSONObject beatToJSON(Beat beat) throws JSONException {
@@ -118,9 +124,9 @@ public class RhythmJSONConverter {
         return object;
     }
 
-    private static Beat jsonToBeat(JSONObject object, Measure measure) throws JSONException {
+    private static Beat jsonToBeat(JSONObject object) throws JSONException {
         Log.d(TAG, object.toString());
-        Beat beat = new Beat(measure);
+        Beat beat = new Beat();
         JSONArray soundsArray = object.getJSONArray(KEY_SOUND_IDS);
         beat.subdivideBy(soundsArray.length());
         for (int i = 0; i < soundsArray.length(); i++) {
