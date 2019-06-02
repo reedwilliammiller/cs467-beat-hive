@@ -55,7 +55,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/playback_edit_button_text"
+        android:drawableStart="@drawable/ic_edit"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:layout_constraintEnd_toStartOf="@id/text_view_tempo"
+        android:background="@drawable/btn_rounded"
+        android:textColor="@drawable/btn_text"
         android:layout_marginEnd="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

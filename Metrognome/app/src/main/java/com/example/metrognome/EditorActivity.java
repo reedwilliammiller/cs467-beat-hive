@@ -72,12 +72,10 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
         }
 
 
-        recyclerView = findViewById(R.id.recycler_view_rhythm);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(new BeatAdapter(this, getFragmentManager(), rhythm, true));
 
         titleTextView = findViewById(R.id.text_view_title);
-
 
         titleTextView.setText(title);
         playButton = findViewById(R.id.button_play);
@@ -95,7 +93,6 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
                 finish();
             }
         });
-
 
         RhythmObjectViewModelFactory factory = new RhythmObjectViewModelFactory(this.getApplication(), ID);
         mRhythmObjectViewModel = ViewModelProviders.of(this, factory).get(RhythmObjectViewModel.class);

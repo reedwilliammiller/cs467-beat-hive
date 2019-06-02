@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.metrognome.EditorActivity;
 import com.example.metrognome.PlaybackActivity;
 import com.example.metrognome.R;
 import com.example.metrognome.intent.IntentBuilder;
@@ -22,11 +23,13 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
     class RhythmViewHolder extends RecyclerView.ViewHolder {
         private final Button rhythmItemView;
         private final AppCompatImageButton rhythmTrash;
+        private final AppCompatImageButton rhythmEdit;
 
         private RhythmViewHolder(View itemView) {
             super(itemView);
             rhythmItemView = itemView.findViewById(R.id.rhythmOpenButton);
             rhythmTrash = itemView.findViewById(R.id.rhythmTrashButton);
+            rhythmEdit = itemView.findViewById(R.id.rhythmEditButton);
         }
     }
 
@@ -57,6 +60,19 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
                 public void onClick(View v) {
                     final Context context = v.getContext();
                     Intent intent = IntentBuilder.getBuilder(context, PlaybackActivity.class)
+                            .withId(current.getId())
+                            .withTitle(current.getTitle())
+                            .withRhythm(RhythmJSONConverter.toJSON(current.getRhythm()))
+                            .toIntent();
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.rhythmEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Context context = v.getContext();
+                    Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
                             .withId(current.getId())
                             .withTitle(current.getTitle())
                             .withRhythm(RhythmJSONConverter.toJSON(current.getRhythm()))
