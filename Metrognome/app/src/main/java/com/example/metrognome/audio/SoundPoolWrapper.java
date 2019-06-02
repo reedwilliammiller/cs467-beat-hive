@@ -1,6 +1,7 @@
 package com.example.metrognome.audio;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -14,6 +15,7 @@ import com.example.metrognome.R;
 public class SoundPoolWrapper {
     public static final int INAUDIBLE = -1;
     public static final int DEFAULT_SOUND = 0;
+    public static final int NUM_SOUNDS = 4;
 
     private static final int MAX_SOUND_POOL_STREAMS = 20;
     private static final float DEFAULT_VOLUME = 1f;
@@ -21,9 +23,18 @@ public class SoundPoolWrapper {
     private static final int DEFAULT_LOOP = 0;
     private static final float DEFAULT_RATE = 1f;
     private SoundPool soundPool;
-    private int[] soundIds;
+    private int[] soundIds = new int[NUM_SOUNDS];
 
-    public SoundPoolWrapper(Context context) {
+    private static SoundPoolWrapper INSTANCE;
+
+    public static SoundPoolWrapper get(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new SoundPoolWrapper(context);
+        }
+        return INSTANCE;
+    }
+
+    private SoundPoolWrapper(Context context) {
         init(context);
     }
 
@@ -38,9 +49,10 @@ public class SoundPoolWrapper {
         } else {
             soundPool = new SoundPool(MAX_SOUND_POOL_STREAMS, AudioManager.STREAM_ALARM, 0);
         }
-        soundIds = new int[2];
-        soundIds[0] = soundPool.load(context, R.raw.clave1, DEFAULT_PRIORITY);
-        soundIds[1] = soundPool.load(context, R.raw.clave2, DEFAULT_PRIORITY);
+        soundIds[0] = soundPool.load(context, R.raw.clave, DEFAULT_PRIORITY);
+        soundIds[1] = soundPool.load(context, R.raw.snare, DEFAULT_PRIORITY);
+        soundIds[2] = soundPool.load(context, R.raw.hihat, DEFAULT_PRIORITY);
+        soundIds[3] = soundPool.load(context, R.raw.kick, DEFAULT_PRIORITY);
     }
 
     public int getSoundIdAt(int index) {
@@ -56,7 +68,4 @@ public class SoundPoolWrapper {
             soundPool.play(soundId, DEFAULT_VOLUME, DEFAULT_VOLUME, DEFAULT_PRIORITY, DEFAULT_LOOP, DEFAULT_RATE);
         }
     }
-
-
-
 }

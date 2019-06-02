@@ -1,17 +1,14 @@
 package com.example.metrognome;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,11 +25,14 @@ import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 
+import java.util.List;
+
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
 import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHM_STRING;
 import static com.example.metrognome.intent.IntentBuilder.KEY_TITLE;
 
 public class EditorActivity extends AppCompatActivity implements MeasureEditorAlertDialog.DialogListener, BeatEditorAlertDialog.DialogListener {
+    private static final String TAG = EditorActivity.class.getSimpleName();
     private RhythmObjectViewModel mRhythmObjectViewModel;
     private Rhythm rhythm;
     private RecyclerView recyclerView;;
@@ -129,6 +129,9 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
                 showMeasureDialogFragment(false);
             }
         });
+        if (rhythm.getMeasureCount() == 1) {
+            deleteMeasureButton.setEnabled(false);
+        }
     }
     
     public void showMeasureDialogFragment(boolean isAddMeasure) {
@@ -141,56 +144,62 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
     }
 
     @Override
-    public void onDialogAddMeasure(DialogFragment dialogFragment, int measureIndex) {
-        rhythm.addMeasureAt(measureIndex, new Measure(4));
-        recyclerView.getAdapter().notifyDataSetChanged();
+    public void onDialogAddMeasure(DialogFragment dialogFragment, int measureOrdinal) {
+        Measure toAdd = new Measure(4);
+        rhythm.addMeasureAt(measureOrdinal - 1, toAdd);
+        int beatIndex = rhythm.getBeatsBeforeMeasure(toAdd);
+        recyclerView.getAdapter().notifyItemRangeInserted(beatIndex, 4);
+        for (int idx : rhythm.getIndicesForFirstBeatsOfEachMeasure()) {
+            recyclerView.getAdapter().notifyItemChanged(idx);
+        }
+        recyclerView.smoothScrollToPosition(beatIndex);
+        deleteMeasureButton.setEnabled(true);
     }
 
     @Override
-    public void onDialogRemoveMeasure(DialogFragment dialogFragment, int measureIndex) {
-        rhythm.removeMeasureAt(measureIndex);
-        recyclerView.getAdapter().notifyDataSetChanged();
+    public void onDialogRemoveMeasure(DialogFragment dialogFragment, int measureOrdinal) {
+        Measure toRemove = rhythm.getMeasureAt(measureOrdinal - 1);
+        int beatIndex = rhythm.getBeatsBeforeMeasure(toRemove);
+        rhythm.removeMeasureAt(measureOrdinal - 1);
+        recyclerView.getAdapter().notifyItemRangeRemoved(beatIndex, toRemove.getBeatCount());
+        for (int idx : rhythm.getIndicesForFirstBeatsOfEachMeasure()) {
+            recyclerView.getAdapter().notifyItemChanged(idx);
+        }
         if (rhythm.getMeasureCount() == 1) {
             deleteMeasureButton.setEnabled(false);
         }
     }
 
     @Override
-    public void onDialogAddBeat(DialogFragment dialogFragment, int beatIndex) {
-        recyclerView.getLayoutManager().findViewByPosition(beatIndex).setSelected(false);
+    public void onDialogAddBeat(DialogFragment dialogFragment, final int beatIndex) {
+        Log.d(TAG, "Adding beat at: " + beatIndex);
+        final RecyclerView.ViewHolder oldViewHolder = recyclerView.findViewHolderForAdapterPosition(beatIndex);
+        final View oldView = oldViewHolder.itemView;
+        oldView.setSelected(false);
         rhythm.addBeatAt(beatIndex);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        final View newView = recyclerView.getLayoutManager().findViewByPosition(beatIndex);
-        ObjectAnimator animator = ObjectAnimator.ofArgb(newView, "backgroundColor", Color.GREEN, Color.WHITE)
-                .setDuration(500);
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                newView.setBackground(newView.getResources().getDrawable(R.drawable.background_beat));
-            }
-        });
-        animator.start();
+        recyclerView.getAdapter().notifyItemInserted(beatIndex);
+        recyclerView.getAdapter().notifyItemRangeChanged(beatIndex, rhythm.getIndexOfFirstBeatOfNextMeasure(beatIndex) + 1);
     }
 
     @Override
     public void onDialogRemoveBeat(DialogFragment dialogFragment, final int beatIndex) {
-        final View removeView = recyclerView.getLayoutManager().findViewByPosition(beatIndex);
-        removeView.setSelected(false);
-        ObjectAnimator animator = ObjectAnimator.ofArgb(removeView, "backgroundColor", Color.RED, Color.WHITE)
-                .setDuration(300);
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                removeView.setBackground(removeView.getResources().getDrawable(R.drawable.background_beat));
-                rhythm.removeBeatAt(beatIndex);
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-        });
-        animator.start();
+        Log.d(TAG, "Removing beat at: " + beatIndex);
+        final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(beatIndex);
+        final View view = viewHolder.itemView;
+        if (view != null) {
+            view.setSelected(false);
+        }
+        rhythm.removeBeatAt(beatIndex);
+        recyclerView.getAdapter().notifyItemRemoved(beatIndex);
+        recyclerView.getAdapter().notifyItemRangeChanged(beatIndex - 1, rhythm.getIndexOfFirstBeatOfNextMeasure(beatIndex) + 1);
     }
 
     @Override
     public void onDialogCancel(DialogFragment dialogFragment, int beatIndex) {
-        recyclerView.getLayoutManager().findViewByPosition(beatIndex).setSelected(false);
+        final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(beatIndex);
+        final View view = viewHolder.itemView;
+        if (view != null) {
+            view.setSelected(false);
+        }
     }
 }

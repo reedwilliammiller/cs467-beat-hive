@@ -31,11 +31,11 @@ public class MeasureEditorAlertDialog extends DialogFragment {
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.alert_dialog_measure, null);
         numberPicker = dialogView.findViewById(R.id.number_picker_dialog_measure);
-        numberPicker.setMinValue(0);
+        numberPicker.setMinValue(1);
         numberPicker.setWrapSelectorWheel(false);
 
         if (isAddMeasure) {
-            numberPicker.setMaxValue(measureCount);
+            numberPicker.setMaxValue(measureCount + 1);
             builder.setTitle(R.string.text_add_measure);
             builder.setPositiveButton(R.string.text_button_add, new DialogInterface.OnClickListener() {
                 @Override
@@ -45,7 +45,7 @@ public class MeasureEditorAlertDialog extends DialogFragment {
             });
         } else {
             builder.setTitle(R.string.text_delete_measure);
-            numberPicker.setMaxValue(measureCount - 1);
+            numberPicker.setMaxValue(measureCount);
             builder.setPositiveButton(R.string.text_button_delete, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
