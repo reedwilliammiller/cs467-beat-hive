@@ -1,5 +1,7 @@
 package com.example.metrognome.time;
 
+import android.animation.ObjectAnimator;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 
@@ -8,15 +10,15 @@ import com.example.metrognome.audio.SoundPoolWrapper;
 public class RhythmRunnable implements Runnable {
     private Rhythm rhythm;
     private Handler handler;
-    private RecyclerView recyclerView;
     private SoundPoolWrapper soundPool;
+    private RecyclerView recyclerView;
     private int iterations;
 
     public RhythmRunnable(Rhythm rhythm, RecyclerView recyclerView, Handler handler, SoundPoolWrapper soundPool) {
         this.rhythm = rhythm;
-        this.recyclerView = recyclerView;
         this.handler = handler;
         this.soundPool = soundPool;
+        this.recyclerView = recyclerView;
         this.iterations = 1;
     }
 
