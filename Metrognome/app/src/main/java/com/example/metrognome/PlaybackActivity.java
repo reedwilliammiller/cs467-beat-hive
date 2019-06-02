@@ -116,7 +116,7 @@ public class PlaybackActivity extends AppCompatActivity {
             }
         });
 
-        soundPool = new SoundPoolWrapper(this);
+        soundPool = SoundPoolWrapper.get(this);
         handler = new Handler();
         rhythmRunnable = new RhythmRunnable(rhythm, recyclerView, handler, soundPool);
 

@@ -40,7 +40,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 @Override
                 public void onCreate (@NonNull SupportSQLiteDatabase db){
-                    super.onOpen(db);
+                    super.onCreate(db);
                     new PopulateDbAsync(INSTANCE).execute();
                 }
             };
