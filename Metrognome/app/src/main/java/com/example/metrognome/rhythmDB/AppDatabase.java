@@ -39,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
             new RoomDatabase.Callback(){
 
                 @Override
-                public void onOpen (@NonNull SupportSQLiteDatabase db){
+                public void onCreate (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
                     new PopulateDbAsync(INSTANCE).execute();
                 }

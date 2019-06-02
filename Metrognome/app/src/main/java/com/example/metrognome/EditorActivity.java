@@ -141,7 +141,7 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         RhythmEntity mRhythmEntity;
-                                        mRhythmEntity = new RhythmEntity(0, titleTextView.getText().toString(), rhythm);
+                                        mRhythmEntity = new RhythmEntity(0, userInput.getText().toString(), rhythm);
                                         int new_id = (int) mRhythmObjectViewModel.getRhythmRepository().insert(mRhythmEntity);
                                         final Context context = view.getContext();
                                         Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
@@ -151,7 +151,7 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
                                                 .toIntent();
                                         context.startActivity(intent);
                                         String msgFormat = getString(R.string.text_toast_save_format);
-                                        Toast.makeText(view.getContext(), String.format(msgFormat, title), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(view.getContext(), String.format(msgFormat, userInput.getText().toString()), Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
                                 })

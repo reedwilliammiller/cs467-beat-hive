@@ -16,6 +16,7 @@
     <string name="and_mnemonic">+</string>
     <string name="a_mnemonic">a</string>
     <string name="button_subdivide_text">subdivide</string>
+    <string name="new_beat">New Beat</string>
     <string name="text_delete_measure">Delete Measure</string>
     <string name="text_add_measure">Add Measure</string>
     <string name="text_rhythm_title_hint">Name your beat</string>
@@ -28,5 +29,4 @@
     <string name="text_dialog_beat_add">Add</string>
     <string name="text_dialog_beat_remove">Delete</string>
     <string name="text_toast_save_format">Beat: %s saved.</string>
-    <string name="new_beat">New Beat</string>
 </resources>
