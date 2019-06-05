@@ -13,6 +13,7 @@ public class IntentBuilder {
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_RHYTHM_STRING = "RHYTHM_STRING";
     public static final String KEY_WITH_PLAYBACK = "WITH_PLAYBACK";
+    public static final String KEY_NEW_EDITED = "NEW_EDITED";
     private WeakReference<Context> context;
     private Class<? extends Activity> targetActivity;
     private Map<String, Object> valueMap = new TreeMap<>();
@@ -45,6 +46,12 @@ public class IntentBuilder {
         valueMap.put(KEY_WITH_PLAYBACK, playback);
         return this;
     }
+
+    public IntentBuilder newEdited(boolean edited) {
+        valueMap.put(KEY_NEW_EDITED, edited);
+        return this;
+    }
+
 
     public Intent toIntent() {
         Intent intent = new Intent(context.get(), targetActivity);
