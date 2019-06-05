@@ -56,16 +56,12 @@ public class RhythmRunnable implements Runnable {
                     }, subdivisionOffset);
                 }
 
+                final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
                 handler.postDelayed(new Runnable() {
                 @Override
                     public void run() {
-                        final ObjectAnimator animator = ObjectAnimator.ofArgb(
-                                recyclerView
-                                        .getLayoutManager()
-                                        .findViewByPosition(((LinearLayoutManager) recyclerView.getLayoutManager())
-                                                .findFirstCompletelyVisibleItemPosition()),
-                                "backgroundColor", Color.LTGRAY, Color.WHITE)
-                                .setDuration(measure.getTotalMillis() / measure.getBeatCount());
+                        final ObjectAnimator animator = ObjectAnimator.ofArgb(lm.findViewByPosition(lm.findFirstCompletelyVisibleItemPosition()),
+                                "backgroundColor", Color.LTGRAY, Color.WHITE).setDuration(measure.getTotalMillis() / measure.getBeatCount());
                         animator.start();
 
                         float position = recyclerView
