@@ -1,23 +1,25 @@
 package com.example.metrognome.time;
 
+import android.animation.ObjectAnimator;
+import android.graphics.Color;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.metrognome.animation.ScrollingLayoutManager;
 import com.example.metrognome.audio.SoundPoolWrapper;
 
 public class RhythmRunnable implements Runnable {
     private Rhythm rhythm;
     private Handler handler;
-    private RecyclerView recyclerView;
     private SoundPoolWrapper soundPool;
-    private int iterations;
+    private RecyclerView recyclerView;
 
     public RhythmRunnable(Rhythm rhythm, RecyclerView recyclerView, Handler handler, SoundPoolWrapper soundPool) {
         this.rhythm = rhythm;
-        this.recyclerView = recyclerView;
         this.handler = handler;
         this.soundPool = soundPool;
-        this.iterations = 1;
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -35,6 +37,23 @@ public class RhythmRunnable implements Runnable {
                         rhythm.playBeatSubdivisionAt(beatIndex, subdivisionIndex, soundPool);
                     }
                 }, subdivisionOffset + beatOffset);
+
+                final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                handler.postDelayed(new Runnable() {
+                @Override
+                    public void run() {
+                        final ObjectAnimator animator = ObjectAnimator.ofArgb(lm.findViewByPosition(lm.findFirstCompletelyVisibleItemPosition()),
+                                "backgroundColor", Color.LTGRAY, Color.WHITE).setDuration(rhythm.getMilliesPerBeat());
+                        animator.start();
+
+                        float position = recyclerView
+                                .getLayoutManager()
+                                .findViewByPosition(((LinearLayoutManager) recyclerView.getLayoutManager())
+                                        .findFirstCompletelyVisibleItemPosition()).getX();
+                        ((ScrollingLayoutManager) recyclerView.getLayoutManager()).deltaDynamicOffset((int)(rhythm.getTempo() - position));
+                        recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
+                    }
+                }, i * rhythm.getMilliesPerBeat());
             }
         }
         handler.postDelayed(this, rhythm.getTotalMillis());

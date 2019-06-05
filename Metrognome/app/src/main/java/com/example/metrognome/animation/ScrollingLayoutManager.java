@@ -6,8 +6,6 @@ import android.graphics.PointF;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.NumberPicker;
 
 import com.example.metrognome.R;
@@ -21,39 +19,31 @@ public class ScrollingLayoutManager extends LinearLayoutManager {
 
     private Context context;
     private LinearSmoothScroller scroller;
-    private int iteration = 1;
+    private int offset;
 
     public ScrollingLayoutManager(Context context) {
         super(context, LinearLayoutManager.HORIZONTAL, false);
         this.context = context;
-        scroller  = new LinearSmoothScroller(context) {
+    }
+
+    @Override
+    public void smoothScrollToPosition(RecyclerView view, RecyclerView.State state, final int pos) {
+        this.scroller  = new LinearSmoothScroller(context) {
             @Override
             public PointF computeScrollVectorForPosition(int position) {
                 return ScrollingLayoutManager.this.computeScrollVectorForPosition(position);
             }
 
-//            @Override
-//            protected float calculateSpeedPerPixel(DisplayMetrics dm) { return 2; }
-
             @Override
             protected int calculateTimeForScrolling(int dx) {
-                return 19000;
-                /* TODO: AP
-                 * Estimates:
-                 * 160 ~= 7150
-                 * 120 ~= 9550
-                 * 80 ~= 14250
-                 * 60 ~= 19000
-                 */
+                return (int)(1.0857 * Math.pow(getBPM(), 2.) + -353.9635 * getBPM() + 36500) + offset; // 36081.9094
             }
         };
-    }
-
-    @Override
-    public void smoothScrollToPosition(RecyclerView view, RecyclerView.State state, final int pos) {
         scroller.setTargetPosition(pos);
         startSmoothScroll(scroller);
     }
+
+    public void deltaDynamicOffset(int offset) { this.offset = offset; }
 
     private int getBPM() {
         NumberPicker bpmPicker = ((Activity) context).findViewById(R.id.number_picker_tempo);

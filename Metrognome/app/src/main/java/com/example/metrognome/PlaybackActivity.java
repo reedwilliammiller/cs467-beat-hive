@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,6 +22,7 @@ import com.example.metrognome.rhythmDB.RhythmObjectViewModelFactory;
 import com.example.metrognome.rhythmProcessor.RhythmJSONConverter;
 import com.example.metrognome.time.Rhythm;
 import com.example.metrognome.time.RhythmRunnable;
+import com.example.metrognome.animation.TouchlessRecyclerView;
 
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
 import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHM_STRING;
@@ -40,10 +40,11 @@ public class PlaybackActivity extends AppCompatActivity {
     private Handler handler;
     private Rhythm rhythm;
     private RhythmRunnable rhythmRunnable;
-    private RecyclerView recyclerView;
+    private TouchlessRecyclerView recyclerView;
     private ScrollingLayoutManager scroller;
     private RhythmObjectViewModel mRhythmObjectViewModel;
     private Button editButton;
+    private boolean playing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +73,13 @@ public class PlaybackActivity extends AppCompatActivity {
 
         titleTextView = findViewById(R.id.text_view_title);
         titleTextView.setText(title);
+        playing = false;
 
-        recyclerView = findViewById(R.id.recycler_view_rhythm);
+        recyclerView = findViewById(R.id.recycler_view_playable_measure);
 
         recyclerView.setAdapter(new BeatAdapter(this, getFragmentManager(), rhythm, false));
         scroller = new ScrollingLayoutManager(this);
         recyclerView.setLayoutManager(scroller);
-
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Rhythm.MIN_BPM);
@@ -88,6 +89,8 @@ public class PlaybackActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 rhythm.setTempo(newVal);
+                if (playing == true)
+                    recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
             }
         });
 
@@ -129,12 +132,13 @@ public class PlaybackActivity extends AppCompatActivity {
     }
 
     private void startPlayer() {
-        recyclerView.scrollToPosition(0);
+        playing = true;
         handler.post(rhythmRunnable);
         recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
     }
 
     private void stopPlayer() {
+        playing = false;
         handler.removeCallbacksAndMessages(null);
         recyclerView.scrollToPosition(0);
     }
