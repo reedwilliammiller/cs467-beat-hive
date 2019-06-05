@@ -19,6 +19,7 @@ public class ScrollingLayoutManager extends LinearLayoutManager {
 
     private Context context;
     private LinearSmoothScroller scroller;
+    private int offset;
 
     public ScrollingLayoutManager(Context context) {
         super(context, LinearLayoutManager.HORIZONTAL, false);
@@ -35,13 +36,14 @@ public class ScrollingLayoutManager extends LinearLayoutManager {
 
             @Override
             protected int calculateTimeForScrolling(int dx) {
-                System.out.println("RECALCULATING SCROLL");
-                return (int)(1.0857 * Math.pow(getBPM(), 2.) + -353.9635 * getBPM() + 36500); //36081.9094);
+                return (int)(1.0857 * Math.pow(getBPM(), 2.) + -353.9635 * getBPM() + 36500) + offset; // 36081.9094
             }
         };
         scroller.setTargetPosition(pos);
         startSmoothScroll(scroller);
     }
+
+    public void deltaDynamicOffset(int offset) { this.offset = offset; }
 
     private int getBPM() {
         NumberPicker bpmPicker = ((Activity) context).findViewById(R.id.number_picker_tempo);
