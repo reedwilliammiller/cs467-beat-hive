@@ -35,12 +35,11 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof BeatViewHolder) {
             BeatViewHolder viewHolder = (BeatViewHolder) holder;
-            final Beat beat = rhythm.getBeatAt(position);
-            viewHolder.beat = beat;
-            viewHolder.measure = rhythm.getMeasureForBeatAt(position);
+            viewHolder.beat = rhythm.getBeatAt(position % rhythm.getBeatCount());
+            viewHolder.measure = rhythm.getMeasureForBeatAt(position % rhythm.getBeatCount());
             viewHolder.rhythm = rhythm;
             viewHolder.isEditable = this.isEditable;
             if (isEditable) {
@@ -50,7 +49,7 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         v.setSelected(true);
                         DialogFragment beatEditorAlertDialog = new BeatEditorAlertDialog();
                         Bundle args = new Bundle();
-                        args.putInt(BeatEditorAlertDialog.KEY_BEAT_INDEX, position);
+                        args.putInt(BeatEditorAlertDialog.KEY_BEAT_INDEX, holder.getAdapterPosition());
                         beatEditorAlertDialog.setArguments(args);
                         beatEditorAlertDialog.show(fragmentManager, "beat_editor");
                         return true;
@@ -64,6 +63,9 @@ public class BeatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return rhythm.getBeatCount();
+        if (isEditable) {
+            return rhythm.getBeatCount();
+        }
+        return Integer.MAX_VALUE;
     }
 }

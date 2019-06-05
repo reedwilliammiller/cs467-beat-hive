@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.metrognome.audio.SoundPoolWrapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -98,6 +99,26 @@ public class Rhythm implements Iterable<Beat> {
         return measures.get(index);
     }
 
+    public List<Integer> getIndicesForFirstBeatsOfEachMeasure() {
+        List<Integer> indices = new ArrayList<>();
+        int beatIndex = 0;
+        for (Measure measure : measures) {
+            indices.add(beatIndex);
+            beatIndex += measure.getBeatCount();
+        }
+        return indices;
+    }
+
+    public int getIndexOfFirstBeatOfNextMeasure(int index) {
+        List<Integer> firstBeatIndices = getIndicesForFirstBeatsOfEachMeasure();
+        for (int firstBeatIndex : firstBeatIndices) {
+            if (firstBeatIndex > index) {
+                return firstBeatIndex;
+            }
+        }
+        return getBeatCount();
+    }
+
     /**
      * Returns the measure for the specified beat index.
      * @param beatIndex the beat index
@@ -117,7 +138,7 @@ public class Rhythm implements Iterable<Beat> {
         return currentMeasure;
     }
 
-    private int getBeatsBeforeMeasure(final Measure measure) {
+    public int getBeatsBeforeMeasure(final Measure measure) {
         int beatCount = 0;
         for (Measure thisMeasure : measures) {
             if (thisMeasure.equals(measure)) {

@@ -35,7 +35,7 @@ public class Beat {
             throw new IllegalArgumentException("Subdivisions must be between 1 and 4: " + numSubdivisions);
         }
         this.numSubdivisions = numSubdivisions;
-        for (int i = 1; i < numSubdivisions; i++) {
+        for (int i = 1; i < MAX_SUBDIVISIONS; i++) {
             setSoundAt(i, SoundPoolWrapper.INAUDIBLE);
         }
         setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);

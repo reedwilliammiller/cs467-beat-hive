@@ -74,9 +74,11 @@ public class PlaybackActivity extends AppCompatActivity {
         titleTextView.setText(title);
 
         recyclerView = findViewById(R.id.recycler_view_rhythm);
+
         recyclerView.setAdapter(new BeatAdapter(this, getFragmentManager(), rhythm, false));
         scroller = new ScrollingLayoutManager(this);
         recyclerView.setLayoutManager(scroller);
+
 
         numberPicker = findViewById(R.id.number_picker_tempo);
         numberPicker.setMinValue(Rhythm.MIN_BPM);
@@ -116,7 +118,7 @@ public class PlaybackActivity extends AppCompatActivity {
             }
         });
 
-        soundPool = new SoundPoolWrapper(this);
+        soundPool = SoundPoolWrapper.get(this);
         handler = new Handler();
         rhythmRunnable = new RhythmRunnable(rhythm, recyclerView, handler, soundPool);
 

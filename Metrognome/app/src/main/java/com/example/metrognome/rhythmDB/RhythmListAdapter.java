@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.metrognome.EditorActivity;
 import com.example.metrognome.PlaybackActivity;
 import com.example.metrognome.R;
 import com.example.metrognome.intent.IntentBuilder;
@@ -18,21 +19,28 @@ import java.util.List;
 
 
 public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.RhythmViewHolder> {
+
     class RhythmViewHolder extends RecyclerView.ViewHolder {
         private final Button rhythmItemView;
         private final AppCompatImageButton rhythmTrash;
+        private final AppCompatImageButton rhythmEdit;
 
         private RhythmViewHolder(View itemView) {
             super(itemView);
             rhythmItemView = itemView.findViewById(R.id.rhythmOpenButton);
             rhythmTrash = itemView.findViewById(R.id.rhythmTrashButton);
+            rhythmEdit = itemView.findViewById(R.id.rhythmEditButton);
         }
     }
 
+    AppDatabase db;
     private final LayoutInflater mInflater;
     private List<RhythmEntity> mRhythmEntities;
 
-    public RhythmListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
+    public RhythmListAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+        db = AppDatabase.getDatabase(context);
+    }
 
     @Override
     public RhythmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,6 +52,7 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
     @Override
     public void onBindViewHolder(RhythmViewHolder holder, int position) {
         if (mRhythmEntities != null) {
+
             final RhythmEntity current = mRhythmEntities.get(position);
             holder.rhythmItemView.setText(current.getTitle());
             holder.rhythmItemView.setOnClickListener(new View.OnClickListener() {
@@ -58,11 +67,27 @@ public class RhythmListAdapter extends RecyclerView.Adapter<RhythmListAdapter.Rh
                     context.startActivity(intent);
                 }
             });
+
+            holder.rhythmEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Context context = v.getContext();
+                    Intent intent = IntentBuilder.getBuilder(context, EditorActivity.class)
+                            .withId(current.getId())
+                            .withTitle(current.getTitle())
+                            .withRhythm(RhythmJSONConverter.toJSON(current.getRhythm()))
+                            .toIntent();
+                    context.startActivity(intent);
+                }
+            });
+
             holder.rhythmTrash.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mRhythmEntities.remove(current);
                     notifyDataSetChanged();
+                    RhythmDao mRhythmDao = db.rhythmDao();
+                    mRhythmDao.delete(current);
                 }
             });
 

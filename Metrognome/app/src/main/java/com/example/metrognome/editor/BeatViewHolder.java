@@ -3,13 +3,10 @@ package com.example.metrognome.editor;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.metrognome.R;
-import com.example.metrognome.audio.SoundPoolWrapper;
 import com.example.metrognome.time.Beat;
 import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
@@ -40,7 +37,7 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
             measureView.setVisibility(View.VISIBLE);
             measureTextView = view.findViewById(R.id.text_view_measure);
             beatCountTextView = view.findViewById(R.id.text_view_measure_beat_count);
-            measureTextView.setText(String.format("%d/%d", rhythm.indexOf(measure) + 1, rhythm.getMeasureCount()));
+            measureTextView.setText(String.format("%d/%d", rhythm.getMeasureNumberInRhythm(measure), rhythm.getMeasureCount()));
             beatCountTextView.setText(String.format("%d", measure.getBeatCount()));
         }
 
@@ -69,22 +66,20 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
 
     private void setupNote(final int noteId, final int subdivisionIndex) {
         View noteView = view.findViewById(noteId);
-        ToggleButton noteButton = noteView.findViewById(R.id.button_note);
+        final NoteImageButton noteButton = noteView.findViewById(R.id.button_note);
         updateNoteText(noteId, subdivisionIndex);
-        if (subdivisionIndex < beat.getSubdivisions() && beat.getSoundAt(subdivisionIndex) != SoundPoolWrapper.INAUDIBLE) {
-            noteButton.setChecked(true);
+        if (subdivisionIndex < beat.getSubdivisions() ) {
+            noteButton.setState(beat.getSoundAt(subdivisionIndex));
         }
         if (isEditable) {
-            noteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            noteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.DEFAULT_SOUND);
-                    } else {
-                        beat.setSoundAt(subdivisionIndex, SoundPoolWrapper.INAUDIBLE);
-                    }
+                public void onClick(View v) {
+                    noteButton.nextState();
+                    beat.setSoundAt(subdivisionIndex, noteButton.getState());
                 }
             });
+
         } else {
             noteButton.setEnabled(false);
         }
@@ -120,24 +115,24 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
     private void updateVisibility() {
         int subdivisionCount = beat.getSubdivisions();
         if (subdivisionCount < 2) {
-            view.findViewById(R.id.button_remove_subdivision).setVisibility(View.GONE);
-            view.findViewById(R.id.note_2).setVisibility(View.GONE);
+            view.findViewById(R.id.button_remove_subdivision).setVisibility(View.INVISIBLE);
+            hideNoteView(view.findViewById(R.id.note_2));
         } else {
             view.findViewById(R.id.button_remove_subdivision).setVisibility(View.VISIBLE);
             view.findViewById(R.id.note_2).setVisibility(View.VISIBLE);
             updateNoteText(R.id.note_2, 1);
         }
         if (subdivisionCount < 3) {
-            view.findViewById(R.id.note_3).setVisibility(View.GONE);
+            hideNoteView(view.findViewById(R.id.note_3));
         } else {
             view.findViewById(R.id.note_3).setVisibility(View.VISIBLE);
             updateNoteText(R.id.note_3, 2);
         }
         if (subdivisionCount < 4) {
             view.findViewById(R.id.button_add_subdivision).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.note_4).setVisibility(View.GONE);
+            hideNoteView(view.findViewById(R.id.note_4));
         } else {
-            view.findViewById(R.id.button_add_subdivision).setVisibility(View.GONE);
+            view.findViewById(R.id.button_add_subdivision).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.note_4).setVisibility(View.VISIBLE);
             updateNoteText(R.id.note_4, 3);
         }
@@ -173,12 +168,18 @@ public class BeatViewHolder extends RecyclerView.ViewHolder {
                     default:
                         noteView = view.findViewById(R.id.note_1);
                 }
-                ToggleButton noteButton = noteView.findViewById(R.id.button_note);
-                noteButton.setChecked(false);
+                NoteImageButton noteButton = noteView.findViewById(R.id.button_note);
+                noteButton.setState(-1);
                 beat.removeSubdivision();
                 updateVisibility();
             }
         });
+    }
+
+    private void hideNoteView(View noteView) {
+        NoteImageButton noteButton = noteView.findViewById(R.id.button_note);
+        noteButton.setState(-1);
+        noteView.setVisibility(View.GONE);
     }
 
 

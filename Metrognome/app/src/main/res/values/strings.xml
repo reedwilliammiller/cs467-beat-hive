@@ -4,8 +4,8 @@
     <string name="start">Start</string>
     <string name="stop">stop</string>
     <string name="basic_metronome">Basic Metronome</string>
-    <string name="your_beats">Your Beats</string>
-    <string name="create_new_beat">Create Beat</string>
+    <string name="your_beats">Beats Library</string>
+    <string name="create_new_beat">Create New Beat</string>
     <string name="recent_beats">Recent Beats</string>
     <string name="edit">Edit</string>
     <string name="mambo_5">Mambo #5</string>
@@ -16,6 +16,7 @@
     <string name="and_mnemonic">+</string>
     <string name="a_mnemonic">a</string>
     <string name="button_subdivide_text">subdivide</string>
+    <string name="new_beat">New Beat</string>
     <string name="text_delete_measure">Delete Measure</string>
     <string name="text_add_measure">Add Measure</string>
     <string name="text_rhythm_title_hint">Name your beat</string>
@@ -28,5 +29,4 @@
     <string name="text_dialog_beat_add">Add</string>
     <string name="text_dialog_beat_remove">Delete</string>
     <string name="text_toast_save_format">Beat: %s saved.</string>
-    <string name="new_beat">New Beat</string>
 </resources>

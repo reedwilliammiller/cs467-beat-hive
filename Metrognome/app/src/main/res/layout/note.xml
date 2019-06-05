@@ -14,13 +14,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/button_note" />
 
-    <ToggleButton
+    <com.example.metrognome.editor.NoteImageButton
         android:id="@+id/button_note"
-        android:background="@drawable/ic_note"
+        android:background="@drawable/ic_circle"
         android:layout_width="@dimen/note_size"
         android:layout_height="@dimen/note_size"
-        android:textOff=""
-        android:textOn=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_note"
