@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
-import com.example.metrognome.R;
 import com.example.metrognome.animation.ScrollingLayoutManager;
 import com.example.metrognome.audio.SoundPoolWrapper;
 
@@ -16,7 +14,6 @@ public class RhythmRunnable implements Runnable {
     private Handler handler;
     private SoundPoolWrapper soundPool;
     private RecyclerView recyclerView;
-    private int lastpos = 0;
 
     public RhythmRunnable(Rhythm rhythm, RecyclerView recyclerView, Handler handler, SoundPoolWrapper soundPool) {
         this.rhythm = rhythm;
@@ -40,28 +37,13 @@ public class RhythmRunnable implements Runnable {
                         rhythm.playBeatSubdivisionAt(beatIndex, subdivisionIndex, soundPool);
                     }
                 }, subdivisionOffset + beatOffset);
-        for (int k = 0; k < rhythm.getMeasureCount(); k++) {
-            final Measure measure = rhythm.getMeasureAt(k);
-            for (int i = 0; i < measure.getBeatCount(); i++) {
-                Beat beat = measure.getBeatAt(i);
-                for (int j = 0; j < beat.getSubdivisions(); j++) {
-                    final int beatIndex = i;
-                    final int subdivisionIndex = j;
-                    final long subdivisionOffset = measure.getSubdivisionOffsetMillisAt(i, j) + k * measure.getTotalMillis();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            measure.playBeatAtSubdivisionAt(beatIndex, subdivisionIndex, soundPool);
-                        }
-                    }, subdivisionOffset);
-                }
 
                 final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
                 handler.postDelayed(new Runnable() {
                 @Override
                     public void run() {
                         final ObjectAnimator animator = ObjectAnimator.ofArgb(lm.findViewByPosition(lm.findFirstCompletelyVisibleItemPosition()),
-                                "backgroundColor", Color.LTGRAY, Color.WHITE).setDuration(measure.getTotalMillis() / measure.getBeatCount());
+                                "backgroundColor", Color.LTGRAY, Color.WHITE).setDuration(rhythm.getMilliesPerBeat());
                         animator.start();
 
                         float position = recyclerView
@@ -71,7 +53,7 @@ public class RhythmRunnable implements Runnable {
                         ((ScrollingLayoutManager) recyclerView.getLayoutManager()).deltaDynamicOffset((int)(rhythm.getTempo() - position));
                         recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
                     }
-                }, i * measure.getTotalMillis() / measure.getBeatCount());
+                }, i * rhythm.getMilliesPerBeat());
             }
         }
         handler.postDelayed(this, rhythm.getTotalMillis());
