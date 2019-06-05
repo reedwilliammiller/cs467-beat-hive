@@ -74,8 +74,6 @@ public class RhythmRunnable implements Runnable {
                                         .findFirstCompletelyVisibleItemPosition()).getX();
                         ((ScrollingLayoutManager) recyclerView.getLayoutManager()).deltaDynamicOffset((int)(rhythm.getTempo() - position));
                         recyclerView.smoothScrollToPosition(Integer.MAX_VALUE);
-                        if (lastpos - position > 400 || lastpos - position < -400)
-                            System.out.println("*******************************ERROR***********************************************");
                     }
                 }, i * measure.getTotalMillis() / measure.getBeatCount());
             }
