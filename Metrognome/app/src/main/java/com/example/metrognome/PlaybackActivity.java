@@ -112,6 +112,7 @@ public class PlaybackActivity extends AppCompatActivity {
                         .withId(ID)
                         .withTitle(title)
                         .withRhythm(rhythmString)
+                        .newEdited(true)
                         .toIntent();
                 context.startActivity(intent);
                 finish();

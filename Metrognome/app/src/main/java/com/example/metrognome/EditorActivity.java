@@ -32,6 +32,7 @@ import com.example.metrognome.time.Measure;
 import com.example.metrognome.time.Rhythm;
 
 import static com.example.metrognome.intent.IntentBuilder.KEY_ID;
+import static com.example.metrognome.intent.IntentBuilder.KEY_NEW_EDITED;
 import static com.example.metrognome.intent.IntentBuilder.KEY_RHYTHM_STRING;
 import static com.example.metrognome.intent.IntentBuilder.KEY_TITLE;
 
@@ -58,10 +59,11 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
     private void init() {
         Intent intent = getIntent();
         final int ID = intent.getIntExtra(KEY_ID, 0);
+        final boolean newBeat = intent.getBooleanExtra(KEY_NEW_EDITED, false);
         recyclerView = findViewById(R.id.recycler_view_rhythm);
         final String title = intent.getStringExtra(KEY_TITLE);
 
-        if (ID == 0) {
+        if (ID == 0 && !newBeat) {
             Rhythm NEW = new Rhythm(120);
             Measure first = new Measure(4);
             NEW.addMeasure(first);
