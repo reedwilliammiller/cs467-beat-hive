@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -35,7 +36,4 @@ public interface RhythmDao {
 
     @Query("UPDATE rhythm_table SET opened = :today WHERE ID = :id")
     void setLastOpened(int id, Date today);
-
-    @Query("SELECT * from rhythm_table ORDER BY opened DESC LIMIT 1")
-    RhythmEntity getRecentRhythm();
 }

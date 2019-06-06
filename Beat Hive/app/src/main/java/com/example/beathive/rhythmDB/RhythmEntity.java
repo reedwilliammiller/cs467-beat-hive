@@ -24,6 +24,7 @@ public class RhythmEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     public int getId() {
         return id;
     }
