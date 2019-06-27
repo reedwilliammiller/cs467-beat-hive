@@ -101,6 +101,7 @@ public class EditorActivity extends AppCompatActivity implements MeasureEditorAl
 
         saveButton = findViewById(R.id.button_save);
         if (ID == 0) {
+            saveButton.setAlpha(0.5f);
             saveButton.setEnabled(false);
         }
         saveButton.setOnClickListener(new View.OnClickListener() {

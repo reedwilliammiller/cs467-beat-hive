@@ -37,7 +37,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback(){
-
                 @Override
                 public void onCreate (@NonNull SupportSQLiteDatabase db){
                     super.onCreate(db);
@@ -73,7 +72,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             Rhythm FOUR = new Rhythm( 120);
             FOUR.addMeasure(new Measure( 4));
-            mDao.insert(new RhythmEntity(1, "Four on the Floor", FOUR));
+            mDao.insert(new RhythmEntity(0, "Four on the Floor", FOUR));
 
             Rhythm SPEED = new Rhythm( 220);
             SPEED.addMeasure(new Measure( 4));
@@ -90,7 +89,7 @@ public abstract class AppDatabase extends RoomDatabase {
             SPEED.getBeatAt(7).subdivideBy(2);
             SPEED.getBeatAt(7).setSoundAt(0, SoundPoolWrapper.DEFAULT_SOUND);
             SPEED.getBeatAt(7).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
-            mDao.insert(new RhythmEntity(2, "Speed Up", SPEED));
+            mDao.insert(new RhythmEntity(0, "Speed Up", SPEED));
 
             Rhythm SPORT = new Rhythm( 120);
             SPORT.addMeasure(new Measure( 4));
@@ -110,7 +109,7 @@ public abstract class AppDatabase extends RoomDatabase {
             SPORT.getBeatAt(6).setSoundAt(1, SoundPoolWrapper.DEFAULT_SOUND);
             SPORT.getBeatAt(6).setSoundAt(2, SoundPoolWrapper.INAUDIBLE);
             SPORT.getBeatAt(7).setSoundAt(0, SoundPoolWrapper.INAUDIBLE);
-            mDao.insert(new RhythmEntity(3, "Sports Clap", SPORT));
+            mDao.insert(new RhythmEntity(0, "Sports Clap", SPORT));
             return null;
         }
     }
